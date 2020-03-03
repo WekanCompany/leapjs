@@ -22,6 +22,7 @@ import {
   File,
   Files,
 } from './decorators';
+import CacheManager from './cache/manager';
 
 export {
   ExpressAdapter,
@@ -46,4 +47,5 @@ export {
   Headers,
   File,
   Files,
+  CacheManager,
 };
