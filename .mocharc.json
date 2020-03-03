@@ -1,0 +1,16 @@
+{
+  "extension": ["ts"],
+  "spec": "test/**/*.ts",
+  "require": [
+    "ts-node/register",
+    "tsconfig-paths/register",
+    "source-map-support/register"
+  ],
+  "project": "../../tsconfig.base.json",
+  "reporter": ["spec"],
+  "reporter-options": {
+    "reportDir": "test/reports",
+    "reportFilename": "tests"
+  },
+  "recursive": true
+}

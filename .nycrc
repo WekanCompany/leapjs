@@ -1,0 +1,26 @@
+{
+  "extension": [
+    ".ts"
+  ],
+  "require": [
+    "ts-node/register"
+  ],
+  "include": [
+    "src/**/*.ts"
+  ],
+  "exclude": [
+    "build",
+    "**/*.d.ts",
+    "test/reports"
+  ],
+  "reporter": [
+    "text",
+    "lcov"
+  ],
+  "all": true,
+  "cache": true,
+  "sourceMap": true,
+  "instrument": true,
+  "temp-dir": "test/reports/.nyc_tmp",
+  "report-dir": "test/reports"
+}
