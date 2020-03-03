@@ -1,0 +1,23 @@
+{
+  "name": "@leapjs/common",
+  "version": "0.1.0",
+  "author": "Sanchan Moses",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/WekanCompany/leapjs"
+  },
+  "description": "",
+  "main": "build/src/index.js",
+  "types": "build/src/index.d.ts",
+  "scripts": {
+    "build": "npm run clean && tsc",
+    "clean": "shx rm -rf build",
+    "start:dev": "cross-env NODE_ENV=development node build/src/index.js --color",
+    "watch": "tsc-watch --onSuccess \"npm run start:dev\"",
+    "test": "cross-env NODE_ENV=test TS_NODE_FILES=true nyc mocha"
+  },
+  "dependencies": {
+    "chalk": "^3.0.0"
+  },
+  "devDependencies": {}
+}
