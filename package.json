@@ -7,6 +7,9 @@
     "url": "https://github.com/WekanCompany/leapjs"
   },
   "homepage": "https://github.com/WekanCompany/leapjs",
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
     "watch": "lerna run watch --parallel --stream",
     "build": "lerna run build --stream",
