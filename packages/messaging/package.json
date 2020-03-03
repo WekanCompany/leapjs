@@ -1,0 +1,33 @@
+{
+  "name": "@leapjs/messaging",
+  "version": "0.1.0",
+  "author": "Sanchan Moses",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/WekanCompany/leapjs"
+  },
+  "description": "",
+  "main": "build/src/index.js",
+  "types": "build/src/index.d.ts",
+  "scripts": {
+    "build": "npm run clean && tsc",
+    "clean": "shx rm -rf build",
+    "start:dev": "cross-env NODE_ENV=development node build/src/index.js --color",
+    "watch": "tsc-watch --onSuccess \"npm run start:dev\"",
+    "test": "cross-env NODE_ENV=test TS_NODE_FILES=true nyc mocha"
+  },
+  "dependencies": {
+    "@leapjs/common": "^0.1.0",
+    "@leapjs/queue": "^0.1.0",
+    "@sendgrid/helpers": "6.5.3",
+    "@sendgrid/mail": "6.4.0",
+    "ejs": "3.0.1",
+    "mime-types": "2.1.25",
+    "pug": "2.0.4"
+  },
+  "devDependencies": {
+    "@types/ejs": "3.0.0",
+    "@types/mime-types": "2.1.0",
+    "@types/pug": "2.0.4"
+  }
+}
