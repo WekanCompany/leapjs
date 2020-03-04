@@ -63,5 +63,5 @@
     "tsconfig-paths": "^3.9.0",
     "typescript": "^3.7.3"
   },
-  "version": "0.0.0-development"
+  "version": "1.0.0"
 }
