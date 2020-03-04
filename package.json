@@ -12,13 +12,13 @@
     "access": "public"
   },
   "scripts": {
-    "watch": "./node_modules/.bin/lerna run watch --parallel --stream",
-    "build": "./node_modules/.bin/lerna run build --stream",
+    "watch": "lerna run watch --parallel --stream",
+    "build": "lerna run build --stream",
     "lint": "concurrently 'npm run lint:packages' 'npm run lint:integration' 'npm run lint:spec'",
     "lint:packages": "eslint 'packages/**/**.ts'",
     "lint:integration": "eslint 'integration/**.ts'",
     "lint:spec": "eslint 'packages/**/test/**.ts'",
-    "publish": "./node_modules/.bin/lerna publish --force-publish --access public --exact -m \"chore(@leapjs) publish %s release\""
+    "publish": "lerna publish --force-publish --access public --exact -m \"chore(@leapjs) publish %s release\""
   },
   "engines": {
     "node": ">= 10.0.0"
