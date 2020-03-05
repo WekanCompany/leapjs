@@ -18,7 +18,6 @@
   },
   "dependencies": {
     "@leapjs/common": "^0.1.0",
-    "@leapjs/core": "^0.1.0",
     "cache-manager": "^3.0.0",
     "class-transformer": "^0.2.3",
     "cookie-parser": "^1.4.4",
