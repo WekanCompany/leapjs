@@ -32,7 +32,7 @@ class ExpressAdapter implements IHttpAdapter {
   private container!: ILeapContainer;
   private prefix!: string;
 
-  constructor(container: any, prefix = '') {
+  public init(container: ILeapContainer, prefix = ''): void {
     this.container = container;
     this.prefix = prefix;
   }
