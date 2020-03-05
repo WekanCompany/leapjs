@@ -21,30 +21,39 @@ class Logger implements ILogger {
   };
 
   private static instance: typeof Logger | ILogger = Logger;
+  private context = '';
+
+  constructor(context: string) {
+    this.context = context;
+  }
 
   public async log(message: any, context = ''): Promise<void> {
-    this.call('log', message, context);
+    this.call('log', message, this.context === '' ? context : this.context);
   }
 
   public async warn(message: any, context = ''): Promise<void> {
-    this.call('warn', message, context);
+    this.call('warn', message, this.context === '' ? context : this.context);
   }
 
   public async debug(message: any, context = ''): Promise<void> {
-    this.call('debug', message, context);
+    this.call('debug', message, this.context === '' ? context : this.context);
   }
 
   public async error(message: any, trace: string, context = ''): Promise<void> {
     if (this.isLogLevelEnabled('error')) {
       const instance = this.getInstance();
       if (instance) {
-        instance.error.call(message, trace, context);
+        instance.error.call(
+          message,
+          trace,
+          this.context === '' ? context : this.context,
+        );
       }
     }
   }
 
   public async verbose(message: any, context = ''): Promise<void> {
-    this.call('verbose', message, context);
+    this.call('verbose', message, this.context === '' ? context : this.context);
   }
 
   private isLogLevelEnabled(level: logLevel): boolean {
@@ -59,7 +68,7 @@ class Logger implements ILogger {
   private call(
     name: 'log' | 'warn' | 'debug' | 'verbose',
     message: any,
-    context = '',
+    context: string,
   ): void {
     if (this.isLogLevelEnabled(name)) {
       const instance = this.getInstance();
