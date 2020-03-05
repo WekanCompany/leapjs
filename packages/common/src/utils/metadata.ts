@@ -1,16 +1,29 @@
 import Metadata from '../classes/metadata';
 import { IMetadataResult } from '../interfaces/reflect-metadata';
-import { IType } from '../interfaces/type';
+import { IConstructor } from '../interfaces/constructor';
 import {
   LEAP_PARAM_TYPES,
   LEAP_TAGGED_PARAMETERS,
   LEAP_TAGGED_PROPERTIES,
   LEAP_ROUTER_CONTROLLER_METHODS,
+  DESIGN_PARAM_TYPES,
 } from '../constants';
 import {
   INVALID_DECORATOR_OPERATION,
   DUPLICATED_METADATA,
 } from '../resources/strings';
+import { InjectionToken, Dictionary, ctor } from '../definitions/injector';
+
+function setCtorParams(target: ctor<any>): void {
+  // params is a reference to the target metadata, not a copy of it
+  const params: any = Reflect.getMetadata(DESIGN_PARAM_TYPES, target) || [];
+  const injectionTokens: Dictionary<InjectionToken<any>> =
+    Reflect.getOwnMetadata(LEAP_TAGGED_PARAMETERS, target) || {};
+  const { length } = Object.keys(injectionTokens);
+  for (let i = 0; i < length; i += 1) {
+    params[i] = injectionTokens[i];
+  }
+}
 
 function addMetadata(
   metadataKey: string,
@@ -72,7 +85,7 @@ function addParameterMetadata(
 
 function addMethodMetadata(
   method: string,
-  target: IType<any>,
+  target: IConstructor<any>,
   propertyKey: string,
   descriptor: PropertyDescriptor,
   route: string,
@@ -98,7 +111,7 @@ function addMethodMetadata(
 
 function addMethodParamsMetadata(
   type: string,
-  target: IType<any>,
+  target: IConstructor<any>,
   methodName: string,
   index: number,
   name = '',
@@ -121,6 +134,7 @@ function addMethodParamsMetadata(
 }
 
 export {
+  setCtorParams,
   addPropertyMetadata,
   addParameterMetadata,
   addMethodMetadata,
