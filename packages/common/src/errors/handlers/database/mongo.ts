@@ -1,5 +1,8 @@
-import { ConflictException, ValidationException } from '@leapjs/common';
 import mongoose from 'mongoose';
+import {
+  ConflictException,
+  ValidationException,
+} from '../../../exceptions/wrappers';
 
 function checkErrors(
   error: any,
