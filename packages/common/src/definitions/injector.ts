@@ -1,4 +1,4 @@
-import { IType } from '../interfaces/type';
+import { IConstructor } from '../interfaces/constructor';
 
 type Newable<T> = new (...args: any[]) => T;
 type Abstract<T> = { prototype: T };
@@ -14,4 +14,4 @@ export type Dictionary<T> = {
   [key: string]: T;
 };
 
-export type InjectionToken<T = any> = IType<T> | string | symbol;
+export type InjectionToken<T = any> = IConstructor<T> | string | symbol;
