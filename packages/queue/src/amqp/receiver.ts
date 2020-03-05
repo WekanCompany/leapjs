@@ -1,4 +1,5 @@
 import { ConsumeMessage } from 'amqplib';
+import { Logger } from '@leapjs/common';
 import MqConnection from './connection';
 
 class MqReceiver extends MqConnection {
@@ -7,14 +8,14 @@ class MqReceiver extends MqConnection {
     messageHandler: (msg: ConsumeMessage | null) => any,
     priority = 0,
   ): Promise<void> {
-    console.log(' [*] Waiting for messages in %s', queueName);
+    Logger.log(`Waiting for messages in ${queueName}`, 'Receiver');
 
     try {
-      this.channel.consume(queueName, messageHandler, {
+      await this.channel.consume(queueName, messageHandler, {
         priority,
       });
     } catch (error) {
-      console.log(error);
+      Logger.error('Error consuming messages', error, 'Receiver');
     }
   }
 }
