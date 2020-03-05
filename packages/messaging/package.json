@@ -6,7 +6,10 @@
     "type": "git",
     "url": "https://github.com/WekanCompany/leapjs"
   },
-  "description": "",
+  "publishConfig": {
+    "access": "public"
+  },
+  "description": "Leap - lightweight, flexible, modern node.js framework (@messaging)",
   "main": "build/src/index.js",
   "types": "build/src/index.d.ts",
   "scripts": {
