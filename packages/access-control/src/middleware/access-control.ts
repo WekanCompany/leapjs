@@ -1,4 +1,3 @@
-// import { UnauthorizedError } from 'src/shared/exceptions/wrappers';
 import { Response } from 'express';
 
 function acFilterAttributes(body: any, req: any, res: Response): any {
