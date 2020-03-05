@@ -18,8 +18,8 @@
     "lint:packages": "eslint 'packages/**/**.ts'",
     "lint:integration": "eslint 'integration/**.ts'",
     "lint:spec": "eslint 'packages/**/test/**.ts'",
-    "prerelease": "lerna version --conventional-commits --exact --no-push --yes -m 'chore(release): publish %s'",
-    "release": "lerna publish from-package --yes"
+    "prerelease": "./node_modules/.bin/lerna version --conventional-commits --exact --no-push --yes -m 'chore(release): publish %s'",
+    "release": "./node_modules/.bin/lerna publish from-package --yes"
   },
   "engines": {
     "node": ">= 10.0.0"
