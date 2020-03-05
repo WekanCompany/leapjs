@@ -1,26 +1,23 @@
 import { connect, Connection, Channel, Message } from 'amqplib';
+import { Logger } from '@leapjs/common';
 
 class MqConnection {
   public connection!: Connection;
   protected channel!: Channel;
 
   public async init(url: string): Promise<void> {
-    try {
-      await this.createConnection(url);
-    } catch (error) {
-      console.log('Init connection failed - ', error);
-    }
+    await this.createConnection(url);
   }
 
   private errorHandler(error): void {
-    console.log('Connection error - ', error);
+    Logger.error('Connection error', error, 'RabbitMQ');
   }
 
   private closeHandler(error): void {
-    console.log('connection closed - ', error);
+    Logger.error('Connection closed', error, 'RabbitMQ');
   }
 
-  public isConnected() {
+  public isConnected(): boolean {
     return !!this.channel;
   }
 
@@ -42,7 +39,7 @@ class MqConnection {
         this.channel = channel;
       })
       .catch((error) => {
-        console.log('Connect to RMQ failed - ', error);
+        Logger.error('Failed to create connection', error, 'RabbitMQ');
       });
   }
 
@@ -55,5 +52,4 @@ class MqConnection {
   }
 }
 
-// const queue = new Queue();
 export default MqConnection;
