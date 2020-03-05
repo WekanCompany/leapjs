@@ -1,7 +1,7 @@
 import { Response, NextFunction } from 'express';
 import { findMatching } from '@leapjs/common';
-import aclActions from '../constants';
-import { formatPermissionError } from '../utils';
+import { acActions } from '../constants';
+import formatPermissionError from '../utils';
 
 async function callConstraint(
   req: any,
@@ -50,7 +50,7 @@ function accessControl(
   return (req: any, res: Response, next: NextFunction): void => {
     if (req.decodedToken && req.decodedToken.acl) {
       const [acl]: any = req.decodedToken;
-      const requestedMethod = aclActions[req.method];
+      const requestedMethod = acActions[req.method];
       let requestedResourceName =
         pathComponent === undefined ? '' : pathComponent;
       if (requestedResourceName === '') {
