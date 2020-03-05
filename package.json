@@ -18,7 +18,8 @@
     "lint:packages": "eslint 'packages/**/**.ts'",
     "lint:integration": "eslint 'integration/**.ts'",
     "lint:spec": "eslint 'packages/**/test/**.ts'",
-    "publish": "lerna publish --force-publish --exact -m \"chore(@leapjs) publish %s release\""
+    "prerelease": "lerna version --conventional-commits --exact --no-push --yes -m 'chore(release): publish %s'",
+    "release": "lerna publish from-package --yes"
   },
   "engines": {
     "node": ">= 10.0.0"
@@ -26,6 +27,7 @@
   "dependencies": {
     "@typegoose/typegoose": "6.4.0",
     "chalk": "^3.0.0",
+    "class-validator": "^0.11.0",
     "cors": "^2.8.5",
     "express": "^4.17.1",
     "mongoose": "^5.8.1",
@@ -63,5 +65,5 @@
     "tsconfig-paths": "^3.9.0",
     "typescript": "^3.7.3"
   },
-  "version": "1.0.0"
+  "version": "0.1.0"
 }
