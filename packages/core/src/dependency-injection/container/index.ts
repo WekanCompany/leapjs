@@ -1,44 +1,45 @@
 import { parseScript } from 'esprima';
 import {
-  IType,
+  IConstructor,
   Logger,
   LEAP_TAGGED_PROPERTIES,
   LEAP_TAGGED_PARAMETERS,
   LEAP_PARAM_TYPES,
   DESIGN_PARAM_TYPES,
+  IIdentifier,
+  ILeapContainer,
 } from '@leapjs/common';
-import { IIdentifier } from '../../interfaces/identifier';
 
-class Container {
+class Container implements ILeapContainer {
   protected parent: Container | undefined = undefined;
   // protected options: IContainerOptions;
 
   protected registry = new Map<Function, any>();
   private classMetadata: {
-    target: IType<any>;
+    target: IConstructor<any>;
     parameters: { name: string; metadata: any[] }[];
   }[] = [];
 
   private parameterResolver: any = [];
   private propertyResolver: any = [];
 
-  private getArguments(func: IType<any>): IIdentifier[] {
+  private getArguments(func: IConstructor<any>): IIdentifier[] {
     const functionAsString = func.toString();
     const tree: any = parseScript(functionAsString);
     return tree.body[0].body.body[0].value.params;
   }
 
-  private setParent(parent: Container): void {
-    this.parent = parent;
-  }
+  // private setParent(parent: Container): void {
+  //   this.parent = parent;
+  // }
 
-  private getMetadata(klass: IType<any>, metadataType: string): any {
+  private getMetadata(klass: IConstructor<any>, metadataType: string): any {
     return Reflect.getMetadata(metadataType, klass) || undefined;
   }
 
   private resolveConstructorDependencies(
-    target: IType<any>,
-    Klass: IType<any>,
+    target: IConstructor<any>,
+    Klass: IConstructor<any>,
     match: any,
   ): Function {
     const parameters: any = [];
@@ -60,17 +61,13 @@ class Container {
     return new Klass(...parameters);
   }
 
-  private resolveAttributeDependency<T>(Klass: IType<any>): T {
-    return new Klass();
-  }
+  // public createChild(): Container {
+  //   const container = new Container();
+  //   container.setParent(this);
+  //   return container;
+  // }
 
-  public createChild(): Container {
-    const container = new Container();
-    container.setParent(this);
-    return container;
-  }
-
-  public resolve<T>(Target: IType<any>): T {
+  public resolve<T>(Target: IConstructor<any>): T {
     const ctorParameters = this.getMetadata(Target, LEAP_TAGGED_PARAMETERS);
     const classAttributes = this.getMetadata(Target, LEAP_TAGGED_PROPERTIES);
     const parameters: any = { target: Target, parameters: [] };
@@ -90,7 +87,7 @@ class Container {
 
     if (
       this.classMetadata.find(
-        (metadata: { target: IType<any> }) => metadata.target === Target,
+        (metadata: { target: IConstructor<any> }) => metadata.target === Target,
       ) === undefined
     ) {
       this.classMetadata.push(parameters);
@@ -113,7 +110,7 @@ class Container {
           if (dependencyMetadata && dependencyMetadata.length > 0) {
             for (let j = 0; j < dependencyMetadata.length; j += 1) {
               const match = this.classMetadata.find(
-                (metadata: { target: IType<any> }) =>
+                (metadata: { target: IConstructor<any> }) =>
                   metadata.target === Dependency,
               );
               if (match === undefined) {
@@ -170,7 +167,7 @@ class Container {
           const Dependency = classAttributes[key][0].value();
           this.registry.set(classAttributes[key][0].value(), new Dependency());
           const match = this.classMetadata.find(
-            (metadata: { target: IType<any> }) =>
+            (metadata: { target: IConstructor<any> }) =>
               metadata.target === Dependency,
           );
 
@@ -212,5 +209,4 @@ class Container {
   }
 }
 
-const container = new Container();
-export default container;
+export default Container;
