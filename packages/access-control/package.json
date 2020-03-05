@@ -17,8 +17,7 @@
     "test": "cross-env NODE_ENV=test TS_NODE_FILES=true nyc mocha"
   },
   "dependencies": {
-    "@leapjs/common": "^0.1.0",
-    "@leapjs/core": "^0.1.0"
+    "@leapjs/common": "^0.1.0"
   },
   "devDependencies": {}
 }
