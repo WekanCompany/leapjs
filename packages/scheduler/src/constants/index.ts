@@ -1,16 +1,18 @@
-export enum SchedulerJobStatus {
+enum SchedulerJobMode {
+  ONCE = 'once',
+  RECURRING = 'recurring',
+}
+
+enum SchedulerJobStatus {
   SCHEDULED = 'scheduled',
   TRIGGERED = 'triggered',
   COMPLETED = 'completed',
   CANCELLED = 'cancelled',
 }
 
-export enum SchedulerLogJobStatus {
+enum SchedulerLogJobStatus {
   SUCCESS = 'success',
   FAILURE = 'failure',
 }
 
-export enum SchedulerJobMode {
-  ONCE = 'once',
-  RECURRING = 'recurring',
-}
+export { SchedulerJobMode, SchedulerJobStatus, SchedulerLogJobStatus };
