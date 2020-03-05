@@ -17,6 +17,6 @@ jobs:
       deploy:
         provider: script
         skip_cleanup: true
-        script: echo "//registry.npmjs.org/:_authToken=$NODE_AUTH_TOKEN" > ~/.npmrc && git checkout master && npm run build && npm run prerelease && npm run release
+        script: echo "//registry.npmjs.org/:_authToken=$NODE_AUTH_TOKEN" > ~/.npmrc && git checkout master && npm run boot && npm run build && npm run prerelease && npm run release
         on:
           branch: master
