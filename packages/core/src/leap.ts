@@ -1,17 +1,19 @@
-import { IHttpAdapter, Logger } from '@leapjs/common';
+import { IHttpAdapter, Logger, ILeapApplicationOptions } from '@leapjs/common';
 import Database from './database';
 import MongoDB from './database/mongodb';
-import { IServerOptions } from './interfaces/leap';
+import Container from './dependency-injection/container';
+
 // import AppConfiguration from './configuration/application';
 
-class Leap {
+class LeapApplication {
   // private configuration: AppConfiguration;
   private application: any;
   private database: Database;
 
   // TODO Abstract IHttpAdapter with IHttpServer
   // TODO Add execution context to IHttpServer
-  public create(server: IHttpAdapter, options: IServerOptions): any {
+  public create(server: IHttpAdapter, options: ILeapApplicationOptions): any {
+    server.init(new Container(), options.prefix ? options.prefix : '');
     this.application = server.create(options.corsOptions, options.whitelist);
     this.application.registerControllers(options.controllers);
     // server.mapMiddlewares(options.middlewares);
@@ -30,4 +32,4 @@ class Leap {
   }
 }
 
-export default Leap;
+export default LeapApplication;
