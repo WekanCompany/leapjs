@@ -1,9 +1,14 @@
+os:
+  - linux
+  - windows
+
 language: node_js
 
 node_js:
   - 13
   - 12
   - 10
+  - 8
 
 jobs:
   include:
@@ -11,9 +16,8 @@ jobs:
       node_js: lts/*
       deploy:
         provider: script
-        skip_cleanup: true
-        script:
-          - git checkout master && npm run prerelease && npm run release && git push && git push --tags
+        cleanup: true
+        script: git checkout master && npm run prerelease && npm run release && git push && git push --tags
         on:
           branch: master
           tags: false
