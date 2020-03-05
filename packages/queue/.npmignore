@@ -1,0 +1,6 @@
+src
+node_modules
+test
+# configuration
+package-lock.json
+tsconfig.json
