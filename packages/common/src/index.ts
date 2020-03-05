@@ -3,7 +3,7 @@ import 'reflect-metadata';
 import { HTTP_METHODS } from './definitions/router';
 import injectable from './decorators/core/injectable';
 
-import registerCleanup from './exceptions/handlers/register';
+import registerCleanup from './errors/handlers/register';
 import {
   BadRequestException,
   UnauthorizedException,
@@ -16,15 +16,9 @@ import {
 } from './exceptions/wrappers';
 import HttpException from './exceptions/http-exception';
 
-import { IHttpAdapter } from './interfaces/application';
+import { IHttpAdapter } from './interfaces/http-adapter';
 import { ILogger } from './interfaces/logger';
-import { IType } from './interfaces/type';
-import {
-  IAttributes,
-  IController,
-  IMethodParams,
-  IParameter,
-} from './interfaces/router';
+import { IConstructor } from './interfaces/constructor';
 
 import Logger from './services/logger';
 
@@ -45,6 +39,12 @@ import {
 
 import { addMethodMetadata, addMethodParamsMetadata } from './utils/metadata';
 import { expandObject, findMatching } from './utils/helpers';
+import { ILeapContainer } from './interfaces/container';
+import { BindingScope } from './definitions/binding';
+import { IContainerOptions } from './interfaces/container-options';
+import { IIdentifier } from './interfaces/identifier';
+import { ILeapApplicationOptions } from './interfaces/application-options';
+import mongoErrorHandler from './errors/handlers/database/mongo';
 
 export {
   Metadata,
@@ -68,11 +68,7 @@ export {
   HttpException,
   IHttpAdapter,
   ILogger,
-  IType,
-  IAttributes,
-  IController,
-  IMethodParams,
-  IParameter,
+  IConstructor,
   Logger,
   registerCleanup,
   ctor,
@@ -82,4 +78,10 @@ export {
   addMethodParamsMetadata,
   expandObject,
   findMatching,
+  mongoErrorHandler,
+  ILeapContainer,
+  BindingScope,
+  IContainerOptions,
+  IIdentifier,
+  ILeapApplicationOptions,
 };
