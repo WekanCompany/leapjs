@@ -13,6 +13,7 @@
     "typeRoots": [
       "node_modules/@types",
       "typings/*"
-    ] /* List of folders to include type definitions from. */
+    ] /* List of folders to include type definitions from. */,
+    "types": ["mocha"]
   }
 }
