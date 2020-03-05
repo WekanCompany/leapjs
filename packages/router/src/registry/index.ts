@@ -1,4 +1,7 @@
-import { ctor, IAttributes, IController, IMethodParams } from '@leapjs/common';
+import { ctor } from '@leapjs/common';
+import { IAttributes } from '../interfaces/attributes';
+import { IMethodParams } from '../interfaces/method-params';
+import { IController } from '../interfaces/controller';
 
 class ServerRegistry {
   attributes = new Map<ctor<Function>, IAttributes[]>();
