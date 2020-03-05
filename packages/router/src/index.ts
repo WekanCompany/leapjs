@@ -1,5 +1,5 @@
-import ExpressAdapter from './express/adapters/express';
-import Cors from './express/cors';
+import ExpressAdapter from './adapters/express';
+import Cors from './adapters/express/middleware/cors';
 import {
   Middleware,
   Controller,
