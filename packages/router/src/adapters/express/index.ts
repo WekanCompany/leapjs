@@ -2,10 +2,6 @@ import express from 'express';
 import { plainToClass } from 'class-transformer';
 import multer from 'multer';
 import {
-  IAttributes,
-  IController,
-  IMethodParams,
-  IType,
   HTTP_METHODS,
   IHttpAdapter,
   Logger,
@@ -13,26 +9,36 @@ import {
   DESIGN_PARAM_TYPES,
   LEAP_ROUTER_CONTROLLER_METHODS,
   LEAP_ROUTER_MIDDLEWARE,
+  ILeapContainer,
+  IConstructor,
 } from '@leapjs/common';
 import { ParamsDictionary } from 'express-serve-static-core';
 import cookieParser from 'cookie-parser';
-import { container } from '@leapjs/core';
 import { CorsOptions } from 'cors';
 import ServerRegistry from '../../registry';
-import Cors from '../cors';
+import Cors from './middleware/cors';
 import {
   CLASS_NOT_FOUND,
   PARAM_TYPE_METADATA_NOT_FOUND,
 } from '../../resources/strings';
+import { IController } from '../../interfaces/controller';
+import { IAttributes } from '../../interfaces/attributes';
+import { IMethodParams } from '../../interfaces/method-params';
 
 // TODO refactor
 class ExpressAdapter implements IHttpAdapter {
   private app: express.Express;
   private registry = new ServerRegistry();
-  private prefix = '';
+  private container!: ILeapContainer;
+  private prefix!: string;
+
+  constructor(container: any, prefix = '') {
+    this.container = container;
+    this.prefix = prefix;
+  }
 
   private buildRoute(base: string, resourceRoute: string): string {
-    return `${base}${resourceRoute}`.replace('//', '/');
+    return `/${this.prefix}/${base}/${resourceRoute}`.replace(/\/+/g, '/');
   }
 
   public create(options?: CorsOptions, whitelist?: string[]): express.Express {
@@ -63,7 +69,7 @@ class ExpressAdapter implements IHttpAdapter {
     this.app.listen(port, host);
   }
 
-  public registerControllers(controllers: IType<any>[]): void {
+  public registerControllers(controllers: IConstructor<any>[]): void {
     controllers.forEach((controller: Function) => {
       const methodsMetadata =
         Reflect.getMetadata(
@@ -104,7 +110,7 @@ class ExpressAdapter implements IHttpAdapter {
   }
 
   // TODO move middleware mapping to mapMiddlewares()
-  public registerRoutes(middlewares: IType<any>[]): void {
+  public registerRoutes(middlewares: IConstructor<any>[]): void {
     const globalBeforeMiddlewares: any = [];
     const globalAfterMiddlewares: any = [];
     globalBeforeMiddlewares.push(
@@ -112,14 +118,14 @@ class ExpressAdapter implements IHttpAdapter {
         .filter(
           (middleware: { prototype: any }) => 'before' in middleware.prototype,
         )
-        .map((middleware: IType<any>) => middleware.prototype.before),
+        .map((middleware: IConstructor<any>) => middleware.prototype.before),
     );
     globalAfterMiddlewares.push(
       ...middlewares
         .filter(
           (middleware: { prototype: any }) => 'after' in middleware.prototype,
         )
-        .map((middleware: IType<any>) => middleware.prototype.after),
+        .map((middleware: IConstructor<any>) => middleware.prototype.after),
     );
     this.registry.controllers.forEach((controller: IController) => {
       if (controller.attributes) {
@@ -175,7 +181,7 @@ class ExpressAdapter implements IHttpAdapter {
           const kontroller: any = controller;
 
           if (kontroller.class.prototype !== undefined) {
-            kontroller.class = container.resolve<typeof controller.class>(
+            kontroller.class = this.container.resolve<typeof controller.class>(
               controller.class.prototype.constructor,
             );
           }
@@ -274,7 +280,7 @@ class ExpressAdapter implements IHttpAdapter {
 
   public registerMethodParams(
     type: string,
-    target: IType<any>,
+    target: IConstructor<any>,
     methodName: string,
     index: number,
     name = '',
@@ -339,14 +345,14 @@ class ExpressAdapter implements IHttpAdapter {
     });
 
     this.registry.methodParams.set(
-      target.constructor.name + methodName,
+      `${target.constructor.name}${methodName}`,
       methodParams,
     );
   }
 
   public registerMethods(
     httpMethod: HTTP_METHODS,
-    target: IType<any>,
+    target: IConstructor<any>,
     propertyKey: string,
     descriptor: PropertyDescriptor,
     route: string,
@@ -361,7 +367,7 @@ class ExpressAdapter implements IHttpAdapter {
       }
     }
     let params: IMethodParams | undefined = this.registry.methodParams.get(
-      target.constructor.name + propertyKey,
+      `${target.constructor.name}${propertyKey}`,
     );
     if (params === undefined) {
       params = {} as IMethodParams;

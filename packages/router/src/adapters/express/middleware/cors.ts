@@ -1,6 +1,6 @@
 import express from 'express';
 import cors from 'cors';
-import { ORIGIN_BLOCKED } from '../../resources/strings';
+import { ORIGIN_BLOCKED } from '../../../resources/strings';
 
 class Cors {
   private whitelist!: string[];
