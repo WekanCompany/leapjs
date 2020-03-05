@@ -4,17 +4,9 @@ import { DocumentType } from '@typegoose/typegoose';
 import { parseExpression } from 'cron-parser';
 import { LeapJobModel, LeapJob } from '../models/job';
 import { LeapJobLogModel } from '../models/job-log';
-import {
-  SchedulerJobStatus,
-  SchedulerLogJobStatus,
-  SchedulerJobMode,
-} from '../constants';
+import { SchedulerJobStatus, SchedulerJobMode } from '../constants';
 import { IParserOptions } from '../interfaces';
-import {
-  schedulerJobStatus,
-  schedulerJobMode,
-  schedulerJobLogStatus,
-} from '../types';
+import { schedulerJobStatus, schedulerJobMode } from '../types';
 import {
   INVALID_JOB_DATA,
   REPEAT_PATTERN_EMPTY,
@@ -40,7 +32,7 @@ class Scheduler {
 
   public static async logJob(
     job: any,
-    status: schedulerJobLogStatus,
+    status: schedulerJobStatus,
   ): Promise<void> {
     new LeapJobLogModel({
       id: job._id,
@@ -60,23 +52,19 @@ class Scheduler {
     const { _id } = job;
 
     if (!_id) {
-      Scheduler.logJob(job, SchedulerLogJobStatus.FAILURE);
       Promise.reject(new Error(INVALID_JOB_DATA));
       return;
     }
 
     if (!data.reschedule) {
-      LeapJobModel.findByIdAndUpdate(job._id, { status })
-        .then(() => {
-          Scheduler.logJob(job, SchedulerLogJobStatus.SUCCESS);
-        })
-        .catch((error: any) => {
+      LeapJobModel.findByIdAndUpdate(job._id, { status }).catch(
+        (error: any) => {
           Logger.error('Error updating job status', error, 'Scheduler');
-          Scheduler.logJob(job, SchedulerLogJobStatus.FAILURE);
-        });
-    } else {
-      Scheduler.logJob(job, SchedulerLogJobStatus.SUCCESS);
+        },
+      );
     }
+
+    Scheduler.logJob(job, status);
   }
 
   private async dispatcher(): Promise<void> {
