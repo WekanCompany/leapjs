@@ -1,4 +1,4 @@
-const aclActions = {
+const acActions = {
   POST: 'create',
   PUT: 'replace',
   PATCH: 'update',
@@ -6,4 +6,10 @@ const aclActions = {
   DELETE: 'delete',
 };
 
-export default aclActions;
+enum RoleStatus {
+  DRAFT = 0,
+  ACTIVE = 1,
+  DELETED = 2,
+}
+
+export { acActions, RoleStatus };
