@@ -13,11 +13,7 @@ jobs:
         provider: script
         skip_cleanup: true
         script:
-          - set e
-          - git checkout master
-          - npm run prerelease
-          - npm run release
-          - git push && git push --tags
+          - git checkout master && npm run prerelease && npm run release && git push && git push --tags
         on:
           branch: master
           tags: false
