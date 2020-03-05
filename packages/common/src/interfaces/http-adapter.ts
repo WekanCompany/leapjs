@@ -1,8 +1,10 @@
 import { CorsOptions } from 'cors';
-import { HTTP_METHODS } from '../definitions/router';
+import { ILeapContainer } from './container';
 import { IConstructor } from './constructor';
+import { HTTP_METHODS } from '../definitions/router';
 
 export interface IHttpAdapter {
+  init(container: ILeapContainer, prefix: string): void;
   create(options?: CorsOptions, whitelist?: string[]): any;
   listen(port: number, host: string): void;
   registerControllers(controllers: IConstructor<any>[]): void;
