@@ -1,5 +1,5 @@
 import { prop, post, getModelForClass, index } from '@typegoose/typegoose';
-import { mongoErrorHandler } from '@leapjs/core';
+import { mongoErrorHandler } from '@leapjs/common';
 
 @index({ name: 1 })
 @post('save', mongoErrorHandler('LeapJob'))

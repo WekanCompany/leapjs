@@ -1,7 +1,8 @@
 import { prop, post, getModelForClass } from '@typegoose/typegoose';
+import { mongoErrorHandler } from '@leapjs/common';
 
-// @post('save', ErrorHandler.mongo('LeapJobLog'))
-// @post('findOneAndUpdate', ErrorHandler.mongo('LeapJobLog'))
+@post('save', mongoErrorHandler('LeapJobLog'))
+@post('findOneAndUpdate', mongoErrorHandler('LeapJobLog'))
 class LeapJobLog {
   @prop({ required: true })
   public id!: string;
@@ -21,7 +22,7 @@ class LeapJobLog {
   @prop({
     required: true,
     trim: true,
-    enum: ['success', 'failure'],
+    enum: ['scheduled', 'triggered', 'completed', 'cancelled'],
   })
   public status!: string;
 }
