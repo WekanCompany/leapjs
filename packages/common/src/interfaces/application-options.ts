@@ -1,12 +1,12 @@
-import { IType } from '@leapjs/common';
 import { CorsOptions } from 'cors';
+import { IConstructor } from './constructor';
 
-export interface IServerOptions {
+export interface ILeapApplicationOptions {
   classTransformer?: boolean;
   validation?: boolean;
   defaultErrorHandler?: boolean;
   corsOptions?: CorsOptions;
   whitelist?: string[];
-  controllers: IType<any>[];
-  middlewares?: IType<any>[];
+  controllers: IConstructor<any>[];
+  middlewares?: IConstructor<any>[];
 }

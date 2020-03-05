@@ -1,4 +1,4 @@
-import { BindingScope } from '../dependency-injection/definitions/binding';
+import { BindingScope } from '../definitions/binding';
 
 export interface IContainerOptions {
   autowire?: boolean;
