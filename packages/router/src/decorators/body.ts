@@ -1,8 +1,8 @@
-import { IType, addMethodParamsMetadata } from '@leapjs/common';
+import { IConstructor, addMethodParamsMetadata } from '@leapjs/common';
 
 function Body(): Function {
   return function wrapper(
-    target: IType<any>,
+    target: IConstructor<any>,
     methodName: string,
     index: number,
   ): void {
