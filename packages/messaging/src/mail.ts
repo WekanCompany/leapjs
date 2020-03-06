@@ -74,7 +74,7 @@ class Mail {
       .catch((error: any) => Promise.reject(new Error(error)));
   }
 
-  public async send(args: any, message: any): Promise<void> {
+  public async send(args: any, message: IMailOptions): Promise<void> {
     const body = message;
     this.renderTemplate(body.engine, resolve(body.template), body.templateData)
       .then((html: string) => {
