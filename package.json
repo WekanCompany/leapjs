@@ -25,15 +25,7 @@
   "engines": {
     "node": ">= 10.0.0"
   },
-  "dependencies": {
-    "@typegoose/typegoose": "6.4.0",
-    "chalk": "^3.0.0",
-    "class-validator": "^0.11.0",
-    "cors": "^2.8.5",
-    "express": "^4.17.1",
-    "mongoose": "^5.8.1",
-    "reflect-metadata": "0.1.13"
-  },
+  "dependencies": {},
   "devDependencies": {
     "@types/cache-manager": "^2.10.2",
     "@types/chai": "^4.2.10",
@@ -66,5 +58,5 @@
     "tsconfig-paths": "^3.9.0",
     "typescript": "^3.7.3"
   },
-  "version": "0.2.0"
+  "version": "0.3.0"
 }
