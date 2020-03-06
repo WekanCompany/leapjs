@@ -20,7 +20,10 @@
     "test": "npm run build && cross-env NODE_ENV=test TS_NODE_FILES=true nyc mocha"
   },
   "dependencies": {
-    "chalk": "^3.0.0"
+    "chalk": "^3.0.0",
+    "cors": "^2.8.5",
+    "mongoose": "^5.8.1",
+    "reflect-metadata": "0.1.13"
   },
   "devDependencies": {}
 }
