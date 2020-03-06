@@ -1,5 +1,5 @@
 import { prop } from '@typegoose/typegoose';
-import { RoleStatus } from 'src/constants';
+import { RoleStatus } from '../constants';
 import Permission from './permission';
 
 class BaseRole {

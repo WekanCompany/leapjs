@@ -1,6 +1,6 @@
 import { prop, Ref } from '@typegoose/typegoose';
 import { IsDefined } from 'class-validator';
-import ERROR_MISSING_ROLE from 'src/resources/strings';
+import ERROR_MISSING_ROLE from '../resources/strings';
 import BaseRole from './role';
 
 class UserRole {
