@@ -165,7 +165,7 @@ class ExpressAdapter implements IHttpAdapter {
           let { source } = middleware;
           if (isClass(source)) {
             if ('before' in source.prototype) {
-              source = this.container.resolve(middleware.prototype.constructor);
+              source = this.container.resolve(source.prototype.constructor);
               source = source.before.bind(source);
             } else {
               throw new Error(
@@ -183,7 +183,7 @@ class ExpressAdapter implements IHttpAdapter {
           let { source } = middleware;
           if (isClass(source)) {
             if ('after' in source.prototype) {
-              source = this.container.resolve(middleware.prototype.constructor);
+              source = this.container.resolve(source.prototype.constructor);
               source = source.after.bind(source);
             } else {
               throw new Error(
