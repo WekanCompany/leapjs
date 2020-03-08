@@ -9,7 +9,7 @@ function UseBefore(middleware: Function): Function {
       existingMetadata.push(...middlewares);
     }
     existingMetadata.push({
-      middleware,
+      source: middleware,
       type: 'before',
       target: klass,
     });

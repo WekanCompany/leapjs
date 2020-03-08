@@ -9,7 +9,7 @@ function UseAfter(middleware: Function): Function {
       existingMetadata.push(...middlewares);
     }
     existingMetadata.push({
-      middleware,
+      source: middleware,
       type: 'after',
       target: klass,
     });
