@@ -3,7 +3,7 @@ const INVALID_DECORATOR_OPERATION =
 
 const DUPLICATED_METADATA = 'Metadata key already exists';
 const DUPLICATED_INJECTABLE_DECORATOR =
-  'Cannot apply @injectable multiple times';
+  'Cannot apply multiple decorators (@injectable, @middleware or @controller) to the same object';
 
 const INVALID_INJECTION = 'Error injecting `undefined`';
 
