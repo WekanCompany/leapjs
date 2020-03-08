@@ -48,8 +48,8 @@ function accessControl(
   constraint?: (req: any, res: Response) => Promise<[boolean, string?]>,
 ): (req: any, res: Response, next: NextFunction) => any {
   return (req: any, res: Response, next: NextFunction): void => {
-    if (req.decodedToken && req.decodedToken.acl) {
-      const [acl]: any = req.decodedToken;
+    if (req.decodedToken && req.decodedToken.access) {
+      const { access }: any = req.decodedToken;
       const requestedMethod = acActions[req.method];
       let requestedResourceName =
         pathComponent === undefined ? '' : pathComponent;
@@ -58,11 +58,11 @@ function accessControl(
         [requestedResourceName] = route[2].split('?');
       }
 
-      if (Array.isArray(acl)) {
+      if (Array.isArray(access)) {
         const checkList: any = findMatching(
           'resource',
           ['*', requestedResourceName],
-          acl,
+          access,
         );
         if (checkList.length > 0) {
           const actions = findMatching(
@@ -82,18 +82,14 @@ function accessControl(
               constraint,
             );
             req.decodedToken.attributes = checkList[0].attributes;
+            return next();
           }
         }
-
-        return next(
-          new Error(
-            formatPermissionError(requestedMethod, requestedResourceName),
-          ),
-        );
-      }
-
-      if (acl.resource === '*' || acl.resource === requestedResourceName) {
-        const action = acl.action.split(':');
+      } else if (
+        access.resource === '*' ||
+        access.resource === requestedResourceName
+      ) {
+        const action = access.action.split(':');
         if (action[0] === '*' || action[0].includes(requestedMethod)) {
           handleCustomAction(
             action[1],
@@ -104,11 +100,21 @@ function accessControl(
             requestedResourceName,
             constraint,
           );
-          req.decodedToken.attributes = acl.attributes;
+          req.decodedToken.attributes = access.attributes;
+          return next();
         }
       }
+      return next(
+        new Error(
+          formatPermissionError(requestedMethod, requestedResourceName),
+        ),
+      );
     }
-    return next();
+    return next(
+      new Error(
+        'User access information not passed to access control middleware',
+      ),
+    );
   };
 }
 
