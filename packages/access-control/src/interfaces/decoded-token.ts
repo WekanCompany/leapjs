@@ -1,9 +1,7 @@
-import Permission from '../models/permission';
+import { IPermission } from './permission';
 
-interface IDecodedToken {
+export interface IDecodedToken {
   email: string;
   exp: number;
-  acl: Permission[];
+  acl: IPermission[];
 }
-
-export { IDecodedToken };
