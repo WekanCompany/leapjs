@@ -11,6 +11,7 @@ import {
   LEAP_ROUTER_MIDDLEWARE,
   ILeapContainer,
   IConstructor,
+  isClass,
 } from '@leapjs/common';
 import { ParamsDictionary } from 'express-serve-static-core';
 import cookieParser from 'cookie-parser';
@@ -20,6 +21,8 @@ import Cors from './middleware/cors';
 import {
   CLASS_NOT_FOUND,
   PARAM_TYPE_METADATA_NOT_FOUND,
+  INVALID_BEFORE_MIDDLEWARE_CLASS,
+  INVALID_AFTER_MIDDLEWARE_CLASS,
 } from '../../resources/strings';
 import { IController } from '../../interfaces/controller';
 import { IAttributes } from '../../interfaces/attributes';
@@ -116,18 +119,40 @@ class ExpressAdapter implements IHttpAdapter {
     globalAfterMiddlewares: IConstructor<any>[],
   ): void {
     this.globalBeforeMiddlewares.push(
-      ...globalBeforeMiddlewares.map((middleware: IConstructor<any>) =>
-        'prototype' in middleware ? middleware.prototype.before : middleware,
-      ),
+      ...globalBeforeMiddlewares.map((middleware: any) => {
+        let source = middleware;
+        if (isClass(source)) {
+          if ('before' in source.prototype) {
+            source = this.container.resolve(middleware.prototype.constructor);
+            source = source.before.bind(source);
+          } else {
+            throw new Error(
+              `${source.prototype.constructor.name} ${INVALID_BEFORE_MIDDLEWARE_CLASS}`,
+            );
+          }
+        }
+        return source;
+      }),
     );
     this.globalAfterMiddlewares.push(
-      ...globalAfterMiddlewares.map((middleware: IConstructor<any>) =>
-        'prototype' in middleware ? middleware.prototype.after : middleware,
-      ),
+      ...globalAfterMiddlewares.map((middleware: any) => {
+        let source = middleware;
+        if (isClass(source)) {
+          if ('after' in source.prototype) {
+            source = this.container.resolve(middleware.prototype.constructor);
+            source = source.after.bind(source);
+          } else {
+            throw new Error(
+              `${source.prototype.constructor.name} ${INVALID_AFTER_MIDDLEWARE_CLASS}`,
+            );
+          }
+        }
+        return source;
+      }),
     );
   }
 
-  public mapMiddlewares(
+  public registerMiddlewares(
     controllerMiddleware: any,
   ): { before: any; after: any } {
     const beforeMiddlewares: any = [];
@@ -136,20 +161,38 @@ class ExpressAdapter implements IHttpAdapter {
     beforeMiddlewares.push(
       ...controllerMiddleware
         .filter((middleware: { type: string }) => middleware.type === 'before')
-        .map((middleware) =>
-          'prototype' in middleware.source
-            ? middleware.source.prototype.before
-            : middleware.source,
-        ),
+        .map((middleware: any) => {
+          let { source } = middleware;
+          if (isClass(source)) {
+            if ('before' in source.prototype) {
+              source = this.container.resolve(middleware.prototype.constructor);
+              source = source.before.bind(source);
+            } else {
+              throw new Error(
+                `${source.prototype.constructor.name} ${INVALID_BEFORE_MIDDLEWARE_CLASS}`,
+              );
+            }
+          }
+          return source;
+        }),
     );
     afterMiddlewares.push(
       ...controllerMiddleware
         .filter((middleware: { type: string }) => middleware.type === 'after')
-        .map(({ middleware }) =>
-          'prototype' in middleware.source
-            ? middleware.source.prototype.after
-            : middleware.source,
-        ),
+        .map((middleware: any) => {
+          let { source } = middleware;
+          if (isClass(source)) {
+            if ('after' in source.prototype) {
+              source = this.container.resolve(middleware.prototype.constructor);
+              source = source.after.bind(source);
+            } else {
+              throw new Error(
+                `${source.prototype.constructor.name} ${INVALID_AFTER_MIDDLEWARE_CLASS}`,
+              );
+            }
+          }
+          return source;
+        }),
     );
 
     return { before: beforeMiddlewares, after: afterMiddlewares };
@@ -167,7 +210,9 @@ class ExpressAdapter implements IHttpAdapter {
         );
 
         if (controllerMiddleware) {
-          const { before, after } = this.mapMiddlewares(controllerMiddleware);
+          const { before, after } = this.registerMiddlewares(
+            controllerMiddleware,
+          );
           beforeMiddlewares = before;
           afterMiddlewares = after;
         }
@@ -179,7 +224,7 @@ class ExpressAdapter implements IHttpAdapter {
           );
 
           if (controllerMethodMiddleware) {
-            const { before, after } = this.mapMiddlewares(
+            const { before, after } = this.registerMiddlewares(
               controllerMethodMiddleware,
             );
             beforeMiddlewares.push(...before);
@@ -228,12 +273,9 @@ class ExpressAdapter implements IHttpAdapter {
             }
 
             for (j = 0; j < attribute.methodParams.body.length; j += 1) {
-              params[
-                attribute.methodParams.body[j].index
-              ] = plainToClass(
+              params[attribute.methodParams.body[j].index] = plainToClass(
                 attribute.methodParams.body[j].type as any,
                 request.body,
-                { excludeExtraneousValues: true },
               );
             }
 
