@@ -15,11 +15,12 @@ class LeapApplication {
   public create(server: IHttpAdapter, options: ILeapApplicationOptions): any {
     server.init(new Container(), options.prefix ? options.prefix : '');
     this.application = server.create(options.corsOptions, options.whitelist);
-    this.application.registerControllers(options.controllers);
-    // server.mapMiddlewares(options.middlewares);
-    this.application.registerRoutes(
-      options.middlewares ? options.middlewares : [],
+    server.registerControllers(options.controllers);
+    server.registerGlobalMiddlewares(
+      options.beforeMiddlewares ? options.beforeMiddlewares : [],
+      options.afterMiddlewares ? options.afterMiddlewares : [],
     );
+    server.registerRoutes();
     return this.application;
   }
 
