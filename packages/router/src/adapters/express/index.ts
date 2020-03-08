@@ -31,6 +31,8 @@ class ExpressAdapter implements IHttpAdapter {
   private registry = new ServerRegistry();
   private container!: ILeapContainer;
   private prefix!: string;
+  private globalBeforeMiddlewares: any = [];
+  private globalAfterMiddlewares: any = [];
 
   public init(container: ILeapContainer, prefix = ''): void {
     this.container = container;
@@ -109,28 +111,55 @@ class ExpressAdapter implements IHttpAdapter {
     });
   }
 
-  // TODO move middleware mapping to mapMiddlewares()
-  public registerRoutes(middlewares: IConstructor<any>[]): void {
-    const globalBeforeMiddlewares: any = [];
-    const globalAfterMiddlewares: any = [];
-    globalBeforeMiddlewares.push(
-      ...middlewares
-        .filter(
-          (middleware: { prototype: any }) => 'before' in middleware.prototype,
-        )
-        .map((middleware: IConstructor<any>) => middleware.prototype.before),
+  public registerGlobalMiddlewares(
+    globalBeforeMiddlewares: IConstructor<any>[],
+    globalAfterMiddlewares: IConstructor<any>[],
+  ): void {
+    this.globalBeforeMiddlewares.push(
+      ...globalBeforeMiddlewares.map((middleware: IConstructor<any>) =>
+        'prototype' in middleware ? middleware.prototype.before : middleware,
+      ),
     );
-    globalAfterMiddlewares.push(
-      ...middlewares
-        .filter(
-          (middleware: { prototype: any }) => 'after' in middleware.prototype,
-        )
-        .map((middleware: IConstructor<any>) => middleware.prototype.after),
+    this.globalAfterMiddlewares.push(
+      ...globalAfterMiddlewares.map((middleware: IConstructor<any>) =>
+        'prototype' in middleware ? middleware.prototype.after : middleware,
+      ),
     );
+  }
+
+  public mapMiddlewares(
+    controllerMiddleware: any,
+  ): { before: any; after: any } {
+    const beforeMiddlewares: any = [];
+    const afterMiddlewares: any = [];
+
+    beforeMiddlewares.push(
+      ...controllerMiddleware
+        .filter((middleware: { type: string }) => middleware.type === 'before')
+        .map((middleware) =>
+          'prototype' in middleware.source
+            ? middleware.source.prototype.before
+            : middleware.source,
+        ),
+    );
+    afterMiddlewares.push(
+      ...controllerMiddleware
+        .filter((middleware: { type: string }) => middleware.type === 'after')
+        .map(({ middleware }) =>
+          'prototype' in middleware.source
+            ? middleware.source.prototype.after
+            : middleware.source,
+        ),
+    );
+
+    return { before: beforeMiddlewares, after: afterMiddlewares };
+  }
+
+  public registerRoutes(): void {
     this.registry.controllers.forEach((controller: IController) => {
       if (controller.attributes) {
-        const beforeMiddlewares: any = [];
-        const afterMiddlewares: any = [];
+        let beforeMiddlewares: any = [];
+        let afterMiddlewares: any = [];
 
         const controllerMiddleware = Reflect.getMetadata(
           LEAP_ROUTER_MIDDLEWARE,
@@ -138,20 +167,9 @@ class ExpressAdapter implements IHttpAdapter {
         );
 
         if (controllerMiddleware) {
-          beforeMiddlewares.push(
-            ...controllerMiddleware
-              .filter(
-                (middleware: { type: string }) => middleware.type === 'before',
-              )
-              .map(({ middleware }) => middleware),
-          );
-          afterMiddlewares.push(
-            ...controllerMiddleware
-              .filter(
-                (middleware: { type: string }) => middleware.type === 'after',
-              )
-              .map(({ middleware }) => middleware),
-          );
+          const { before, after } = this.mapMiddlewares(controllerMiddleware);
+          beforeMiddlewares = before;
+          afterMiddlewares = after;
         }
 
         controller.attributes.forEach((attribute: IAttributes) => {
@@ -161,21 +179,11 @@ class ExpressAdapter implements IHttpAdapter {
           );
 
           if (controllerMethodMiddleware) {
-            beforeMiddlewares.push(
-              ...controllerMethodMiddleware
-                .filter(
-                  (middleware: { type: string }) =>
-                    middleware.type === 'before',
-                )
-                .map(({ middleware }) => middleware),
+            const { before, after } = this.mapMiddlewares(
+              controllerMethodMiddleware,
             );
-            afterMiddlewares.push(
-              ...controllerMethodMiddleware
-                .filter(
-                  (middleware: { type: string }) => middleware.type === 'after',
-                )
-                .map(({ middleware }) => middleware),
-            );
+            beforeMiddlewares.push(...before);
+            afterMiddlewares.push(...after);
           }
 
           const kontroller: any = controller;
@@ -255,7 +263,12 @@ class ExpressAdapter implements IHttpAdapter {
               params[attribute.methodParams.files[j].index] = request.files;
             }
 
-            next(controller.class[registeredClass.method.name](...params));
+            return controller.class[registeredClass.method.name](...params)
+              .then((result: any) => {
+                Logger.log(result);
+                return next();
+              })
+              .catch((error: any) => next(error));
           }
 
           const route = `${controller.class.name}_${attribute.method.name}`;
@@ -267,11 +280,11 @@ class ExpressAdapter implements IHttpAdapter {
           // Register route
           this.app[attribute.httpMethod](
             this.buildRoute(controller.baseRoute, `/${attribute.route}`),
-            ...globalBeforeMiddlewares,
+            ...this.globalBeforeMiddlewares,
             ...beforeMiddlewares,
             routeHandler,
             ...afterMiddlewares,
-            ...globalAfterMiddlewares,
+            ...this.globalAfterMiddlewares,
           );
         });
       }
