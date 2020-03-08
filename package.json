@@ -19,7 +19,9 @@
     "lint:integration": "eslint 'integration/**.ts'",
     "lint:spec": "eslint 'packages/**/test/**.ts'",
     "boot": "./node_modules/.bin/lerna bootstrap",
-    "prerelease": "./node_modules/.bin/lerna version --conventional-commits --exact --no-push --yes -m 'chore(release): publish %s'",
+    "prepare:patch": "./node_modules/.bin/lerna version patch --conventional-commits --exact --no-push --yes -m 'chore(release:patch): publish %s'",
+    "prepare:minor": "./node_modules/.bin/lerna version minor --conventional-commits --exact --no-push --yes -m 'chore(release:minor): publish %s'",
+    "prepare:major": "./node_modules/.bin/lerna version major --conventional-commits --exact --no-push --yes -m 'chore(release:major): publish %s'",
     "release": "./node_modules/.bin/lerna publish from-package --yes"
   },
   "engines": {
@@ -58,5 +60,5 @@
     "tsconfig-paths": "^3.9.0",
     "typescript": "^3.7.3"
   },
-  "version": "0.4.0"
+  "version": "0.5.0"
 }
