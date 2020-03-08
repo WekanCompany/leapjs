@@ -78,6 +78,10 @@ class Container implements ILeapContainer {
 
     let resolved!: T;
 
+    if (parameterTypes === undefined) {
+      return new Target();
+    }
+
     for (let i = 0; i < args.length; i += 1) {
       parameters.parameters[i] = {
         name: args[i].name,
