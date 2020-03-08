@@ -23,7 +23,7 @@ class Logger implements ILogger {
   private static instance: typeof Logger | ILogger = Logger;
   private context = '';
 
-  constructor(context: string) {
+  constructor(context = '') {
     this.context = context;
   }
 
@@ -44,6 +44,7 @@ class Logger implements ILogger {
       const instance = this.getInstance();
       if (instance) {
         instance.error.call(
+          '',
           message,
           trace,
           this.context === '' ? context : this.context,

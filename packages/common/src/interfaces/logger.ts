@@ -1,7 +1,7 @@
 export interface ILogger {
-  log(message: any): Promise<void>;
-  error(message: any, trace: string): Promise<void>;
-  debug(message: any): Promise<void>;
-  warn(message: any): Promise<void>;
-  verbose(message: any): Promise<void>;
+  log(message: any, context?: string): Promise<void>;
+  error(message: any, trace: string, context?: string): Promise<void>;
+  debug(message: any, context?: string): Promise<void>;
+  warn(message: any, context?: string): Promise<void>;
+  verbose(message: any, context?: string): Promise<void>;
 }
