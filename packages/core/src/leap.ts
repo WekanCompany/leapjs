@@ -1,3 +1,4 @@
+import express from 'express';
 import { IHttpAdapter, Logger, ILeapApplicationOptions } from '@leapjs/common';
 import Database from './database';
 import MongoDB from './database/mongodb';
@@ -7,7 +8,7 @@ import Container from './dependency-injection/container';
 
 class LeapApplication {
   // private configuration: AppConfiguration;
-  private application: any;
+  private application: express.Express;
   private database: Database;
 
   // TODO Abstract IHttpAdapter with IHttpServer
