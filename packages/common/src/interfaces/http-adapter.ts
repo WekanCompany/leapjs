@@ -8,7 +8,11 @@ export interface IHttpAdapter {
   create(options?: CorsOptions, whitelist?: string[]): any;
   listen(port: number, host: string): void;
   registerControllers(controllers: IConstructor<any>[]): void;
-  registerRoutes(middlewares: IConstructor<any>[]): void;
+  registerGlobalMiddlewares(
+    globalBeforeMiddlewares: IConstructor<any>[],
+    globalAfterMiddlewares: IConstructor<any>[],
+  ): void;
+  registerRoutes(): void;
   registerMethodParams(
     type: string,
     target: IConstructor<any>,
