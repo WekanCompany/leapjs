@@ -15,17 +15,16 @@ function findMatching(key: string, actionArray: string[], arr: any[]): any {
   return tmpArr;
 }
 
-function isClass(object): boolean {
+function isClass(obj: Record<string, any>): boolean {
   const isConstructorClass =
-    object.constructor &&
-    object.constructor.toString().substring(0, 5) === 'class';
-  if (object.prototype === undefined) {
+    obj.constructor && obj.constructor.toString().substring(0, 5) === 'class';
+  if (obj.prototype === undefined) {
     return isConstructorClass;
   }
   const isPrototypeConstructorClass =
-    object.prototype.constructor &&
-    object.prototype.constructor.toString &&
-    object.prototype.constructor.toString().substring(0, 5) === 'class';
+    obj.prototype.constructor &&
+    obj.prototype.constructor.toString &&
+    obj.prototype.constructor.toString().substring(0, 5) === 'class';
   return isConstructorClass || isPrototypeConstructorClass;
 }
 
