@@ -15,7 +15,6 @@ module.exports = {
       './packages/queue/tsconfig.json',
       './packages/router/tsconfig.json',
       './packages/messaging/tsconfig.json',
-      './tsconfig.test.json',
     ],
     sourceType: 'module',
   },
