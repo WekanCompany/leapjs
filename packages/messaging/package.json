@@ -10,12 +10,12 @@
     "access": "public"
   },
   "description": "Leap - lightweight, flexible, modern node.js framework (@messaging)",
-  "main": "build/src/index.js",
-  "types": "build/src/index.d.ts",
+  "main": "dist/src/index.js",
+  "types": "dist/src/index.d.ts",
   "scripts": {
     "build": "npm run clean && tsc",
     "clean": "shx rm -rf build",
-    "start:dev": "cross-env NODE_ENV=development node build/src/index.js --color",
+    "start:dev": "cross-env NODE_ENV=development node dist/src/index.js --color",
     "watch": "tsc-watch --onSuccess \"npm run start:dev\"",
     "test": "cross-env NODE_ENV=test TS_NODE_FILES=true nyc mocha"
   },
