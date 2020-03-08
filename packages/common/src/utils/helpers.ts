@@ -15,4 +15,18 @@ function findMatching(key: string, actionArray: string[], arr: any[]): any {
   return tmpArr;
 }
 
-export { expandObject, findMatching };
+function isClass(object): boolean {
+  const isConstructorClass =
+    object.constructor &&
+    object.constructor.toString().substring(0, 5) === 'class';
+  if (object.prototype === undefined) {
+    return isConstructorClass;
+  }
+  const isPrototypeConstructorClass =
+    object.prototype.constructor &&
+    object.prototype.constructor.toString &&
+    object.prototype.constructor.toString().substring(0, 5) === 'class';
+  return isConstructorClass || isPrototypeConstructorClass;
+}
+
+export { expandObject, findMatching, isClass };
