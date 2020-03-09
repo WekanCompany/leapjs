@@ -39,4 +39,55 @@ function pad(n: string, padWith: string, width: number): string {
     : new Array(width - n.length + 1).join(padWith) + n;
 }
 
-export { expandObject, findMatching, isClass, getRandom, pad };
+function addToDate(
+  date: Date,
+  interval: string,
+  units: number,
+): Date | undefined {
+  if (!(date instanceof Date)) {
+    return undefined;
+  }
+  let newDate = new Date(date);
+
+  const checkRollover = () => {
+    if (newDate.getDate() !== date.getDate()) {
+      newDate.setDate(0);
+    }
+  };
+
+  switch (String(interval).toLowerCase()) {
+    case 'year':
+      newDate.setFullYear(newDate.getFullYear() + units);
+      checkRollover();
+      break;
+    case 'quarter':
+      newDate.setMonth(newDate.getMonth() + 3 * units);
+      checkRollover();
+      break;
+    case 'month':
+      newDate.setMonth(newDate.getMonth() + units);
+      checkRollover();
+      break;
+    case 'week':
+      newDate.setDate(newDate.getDate() + 7 * units);
+      break;
+    case 'day':
+      newDate.setDate(newDate.getDate() + units);
+      break;
+    case 'hour':
+      newDate.setTime(newDate.getTime() + units * 3600000);
+      break;
+    case 'minute':
+      newDate.setTime(newDate.getTime() + units * 60000);
+      break;
+    case 'second':
+      newDate.setTime(newDate.getTime() + units * 1000);
+      break;
+    default:
+      newDate = undefined as any;
+      break;
+  }
+  return newDate;
+}
+
+export { expandObject, findMatching, isClass, getRandom, pad, addToDate };
