@@ -201,8 +201,10 @@ class ExpressAdapter implements IHttpAdapter {
   public registerRoutes(): void {
     this.registry.controllers.forEach((controller: IController) => {
       if (controller.attributes) {
-        let beforeMiddlewares: any = [];
-        let afterMiddlewares: any = [];
+        let beforeControllerMiddlewares = [];
+        let afterControllerMiddlewares = [];
+        let beforeMethodMiddlewares = [];
+        let afterMethodMiddlewares = [];
 
         const controllerMiddleware = Reflect.getMetadata(
           LEAP_ROUTER_MIDDLEWARE,
@@ -213,8 +215,8 @@ class ExpressAdapter implements IHttpAdapter {
           const { before, after } = this.registerMiddlewares(
             controllerMiddleware,
           );
-          beforeMiddlewares = before;
-          afterMiddlewares = after;
+          beforeControllerMiddlewares = before;
+          afterControllerMiddlewares = after;
         }
 
         controller.attributes.forEach((attribute: IAttributes) => {
@@ -227,8 +229,8 @@ class ExpressAdapter implements IHttpAdapter {
             const { before, after } = this.registerMiddlewares(
               controllerMethodMiddleware,
             );
-            beforeMiddlewares.push(...before);
-            afterMiddlewares.push(...after);
+            beforeMethodMiddlewares = before;
+            afterMethodMiddlewares = after;
           }
 
           const kontroller: any = controller;
@@ -260,8 +262,8 @@ class ExpressAdapter implements IHttpAdapter {
             }
 
             for (j = 0; j < attribute.methodParams.param.length; j += 1) {
-              params[attribute.methodParams.query[j].index] =
-                request.param[attribute.methodParams.param[j].name];
+              params[attribute.methodParams.param[j].index] =
+                request.params[attribute.methodParams.param[j].name];
             }
 
             for (j = 0; j < attribute.methodParams.request.length; j += 1) {
@@ -326,9 +328,11 @@ class ExpressAdapter implements IHttpAdapter {
           this.app[attribute.httpMethod](
             this.buildRoute(controller.baseRoute, `/${attribute.route}`),
             ...this.globalBeforeMiddlewares,
-            ...beforeMiddlewares,
+            ...beforeControllerMiddlewares,
+            ...beforeMethodMiddlewares,
             routeHandler,
-            ...afterMiddlewares,
+            ...afterMethodMiddlewares,
+            ...afterControllerMiddlewares,
             ...this.globalAfterMiddlewares,
           );
         });
