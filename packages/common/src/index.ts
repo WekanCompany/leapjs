@@ -44,6 +44,7 @@ import {
   isClass,
   getRandom,
   pad,
+  addToDate,
 } from './utils/helpers';
 import { ILeapContainer } from './interfaces/container';
 import { BindingScope } from './definitions/binding';
@@ -87,6 +88,7 @@ export {
   isClass,
   getRandom,
   pad,
+  addToDate,
   mongoErrorHandler,
   ILeapContainer,
   BindingScope,
