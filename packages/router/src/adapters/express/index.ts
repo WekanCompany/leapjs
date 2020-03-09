@@ -201,10 +201,10 @@ class ExpressAdapter implements IHttpAdapter {
   public registerRoutes(): void {
     this.registry.controllers.forEach((controller: IController) => {
       if (controller.attributes) {
-        let beforeControllerMiddlewares = [];
-        let afterControllerMiddlewares = [];
-        let beforeMethodMiddlewares = [];
-        let afterMethodMiddlewares = [];
+        let beforeControllerMiddlewares: any = [];
+        let afterControllerMiddlewares: any = [];
+        let beforeMethodMiddlewares: any = [];
+        let afterMethodMiddlewares: any = [];
 
         const controllerMiddleware = Reflect.getMetadata(
           LEAP_ROUTER_MIDDLEWARE,
@@ -321,7 +321,7 @@ class ExpressAdapter implements IHttpAdapter {
           const route = `${controller.class.name}_${attribute.method.name}`;
 
           if (this.registry.middlewares.has(route)) {
-            beforeMiddlewares.push(this.registry.middlewares.get(route));
+            beforeMethodMiddlewares.push(this.registry.middlewares.get(route));
           }
 
           // Register route
