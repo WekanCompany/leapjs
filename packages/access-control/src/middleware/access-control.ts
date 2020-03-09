@@ -8,9 +8,10 @@ function acFilterAttributes(body: any, req: any, res: Response): any {
     return body;
   }
 
-  const { attributes } = req.decodedToken;
+  const attributes = req.decodedToken.attributes.split(' ');
   const resource = Object.keys(body.data)[0];
   const data = body.data[resource];
+  const isArr = Array.isArray(body.data[resource]);
   const tmpBody: any = Array.isArray(data) ? data.slice() : [data];
 
   for (let i = 0; i < data.length; i += 1) {
@@ -30,7 +31,7 @@ function acFilterAttributes(body: any, req: any, res: Response): any {
   }
 
   // eslint-disable-next-line no-param-reassign
-  body.data[resource] = tmpBody;
+  body.data[resource] = isArr ? tmpBody : tmpBody[0];
   return body;
 }
 
