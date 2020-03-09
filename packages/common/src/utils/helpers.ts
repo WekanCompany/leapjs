@@ -28,4 +28,15 @@ function isClass(obj: Record<string, any>): boolean {
   return isConstructorClass || isPrototypeConstructorClass;
 }
 
-export { expandObject, findMatching, isClass };
+function getRandom(minimum: number, maximum: number): number {
+  const min = Math.ceil(minimum);
+  return Math.floor(Math.random() * (Math.floor(maximum) - min)) + min;
+}
+
+function pad(n: string, padWith: string, width: number): string {
+  return n.length >= width
+    ? n
+    : new Array(width - n.length + 1).join(padWith) + n;
+}
+
+export { expandObject, findMatching, isClass, getRandom, pad };

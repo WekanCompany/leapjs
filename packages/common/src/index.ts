@@ -38,7 +38,13 @@ import {
 } from './constants';
 
 import { addMethodMetadata, addMethodParamsMetadata } from './utils/metadata';
-import { expandObject, findMatching, isClass } from './utils/helpers';
+import {
+  expandObject,
+  findMatching,
+  isClass,
+  getRandom,
+  pad,
+} from './utils/helpers';
 import { ILeapContainer } from './interfaces/container';
 import { BindingScope } from './definitions/binding';
 import { IContainerOptions } from './interfaces/container-options';
@@ -79,6 +85,8 @@ export {
   expandObject,
   findMatching,
   isClass,
+  getRandom,
+  pad,
   mongoErrorHandler,
   ILeapContainer,
   BindingScope,
