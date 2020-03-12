@@ -10,11 +10,12 @@ class LeapApplication {
   // private configuration: AppConfiguration;
   private application: express.Express;
   private database: Database;
+  private container = new Container();
 
   // TODO Abstract IHttpAdapter with IHttpServer
   // TODO Add execution context to IHttpServer
   public create(server: IHttpAdapter, options: ILeapApplicationOptions): any {
-    server.init(new Container(), options.prefix ? options.prefix : '');
+    server.init(this.container, options.prefix ? options.prefix : '');
     this.application = server.create(options.corsOptions, options.whitelist);
     server.registerControllers(options.controllers);
     server.registerGlobalMiddlewares(
@@ -25,12 +26,15 @@ class LeapApplication {
     return this.application;
   }
 
-  // new MongoDB('mongodb://localhost:27017/', 'framework')
   public connectToDatabase(databaseAdapter: MongoDB): void {
     this.database = new Database(databaseAdapter);
     this.database.connect().catch((error: any) => {
       Logger.error('Connection timed out', error, 'Database');
     });
+  }
+
+  public getContainer(): Container {
+    return this.container;
   }
 }
 
