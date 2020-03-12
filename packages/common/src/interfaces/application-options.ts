@@ -4,8 +4,8 @@ import { IConstructor } from './constructor';
 
 export interface ILeapApplicationOptions {
   controllers: IConstructor<any>[];
-  beforeMiddlewares?: IConstructor<any>[];
-  afterMiddlewares?: IConstructor<any>[];
+  beforeMiddlewares?: any;
+  afterMiddlewares?: any;
   prefix?: string;
   corsOptions?: CorsOptions;
   whitelist?: string[];
