@@ -11,6 +11,7 @@ class LeapApplication {
   private application: express.Express;
   private database: Database;
   private container = new Container();
+  private logger = Logger.getInstance();
 
   // TODO Abstract IHttpAdapter with IHttpServer
   // TODO Add execution context to IHttpServer
@@ -29,7 +30,7 @@ class LeapApplication {
   public connectToDatabase(databaseAdapter: MongoDB): void {
     this.database = new Database(databaseAdapter);
     this.database.connect().catch((error: any) => {
-      Logger.error('Connection timed out', error, 'Database');
+      this.logger.error('Connection timed out', error, 'Database');
     });
   }
 

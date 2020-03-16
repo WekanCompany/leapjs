@@ -5,6 +5,7 @@ class MongoDB {
   private host!: string;
   private database!: string;
   private options!: mongoose.ConnectionOptions;
+  private logger = Logger.getInstance();
 
   constructor(
     host: string,
@@ -30,7 +31,11 @@ class MongoDB {
 
     return new Promise((resolve, reject): void => {
       mongoose.connect(databaseUri, this.options).catch((error) => {
-        Logger.error(`Connection to ${this.host} timed out`, error, 'Database');
+        this.logger.error(
+          `Connection to ${this.host} timed out`,
+          error,
+          'Database',
+        );
       });
       mongoose.connection.on('open', (): void => {
         resolve('Success');
@@ -39,9 +44,9 @@ class MongoDB {
         reject(error);
       });
       mongoose.connection.on('disconnected', (): void => {
-        Logger.warn('Database connection dropped');
+        this.logger.warn('Database connection dropped');
         mongoose.connect(databaseUri, this.options).catch((error) => {
-          Logger.error(
+          this.logger.error(
             `Connection to ${this.host} timed out`,
             error,
             'Database',
@@ -49,11 +54,15 @@ class MongoDB {
         });
       });
       mongoose.connection.on('reconnected', (): void => {
-        Logger.log(`Reconnected to ${this.host}`, 'Database');
+        this.logger.log(`Reconnected to ${this.host}`, 'Database');
       });
       process.on('SIGINT', (): void => {
         mongoose.connection.close((): void => {
-          Logger.error(`Connection to ${this.host} closed`, '', 'Database');
+          this.logger.error(
+            `Connection to ${this.host} closed`,
+            '',
+            'Database',
+          );
           process.exit(0);
         });
       });
