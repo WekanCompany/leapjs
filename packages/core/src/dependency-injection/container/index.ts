@@ -1,7 +1,6 @@
 import { parseScript } from 'esprima';
 import {
   IConstructor,
-  Logger,
   LEAP_TAGGED_PROPERTIES,
   LEAP_TAGGED_PARAMETERS,
   LEAP_PARAM_TYPES,
@@ -29,10 +28,7 @@ class Container implements ILeapContainer {
     return tree.body[0].body.body[0].value.params;
   }
 
-  // private setParent(parent: Container): void {
-  //   this.parent = parent;
-  // }
-
+  // TODO move to utils
   private getMetadata(klass: IConstructor<any>, metadataType: string): any {
     return Reflect.getMetadata(metadataType, klass) || undefined;
   }
@@ -46,12 +42,13 @@ class Container implements ILeapContainer {
     const { length } = match.parameters;
 
     for (let i = 0; i < length; i += 1) {
-      if (this.registry.has(match.parameters[i].metadata[0].value())) {
-        parameters.push(
-          this.registry.get(match.parameters[i].metadata[0].value()),
-        );
+      const paramValue = Array.isArray(match.parameters[i].metadata)
+        ? match.parameters[i].metadata[0].value()
+        : undefined;
+      if (this.registry.has(paramValue)) {
+        parameters.push(this.registry.get(paramValue));
       } else {
-        parameters.push(match.parameters[i].metadata[0].value());
+        parameters.push(paramValue);
         this.parameterResolver.push(parameters);
         this.parameterResolver.push(Klass);
         this.parameterResolver.push(target);
@@ -60,12 +57,6 @@ class Container implements ILeapContainer {
 
     return new Klass(...parameters);
   }
-
-  // public createChild(): Container {
-  //   const container = new Container();
-  //   container.setParent(this);
-  //   return container;
-  // }
 
   public resolve<T>(Target: IConstructor<any>): T {
     const ctorParameters = this.getMetadata(Target, LEAP_TAGGED_PARAMETERS);
@@ -126,6 +117,7 @@ class Container implements ILeapContainer {
                   match,
                 );
               }
+              this.registry.set(Dependency, injections[index]);
             }
           } else {
             injections[index] = new Dependency();
@@ -145,16 +137,17 @@ class Container implements ILeapContainer {
         );
         if (unresolvedDependencies) {
           let y = 0;
-          Object.keys(
-            unresolvedDependencies[Object.keys(unresolvedDependencies)[0]],
-          ).forEach((key) => {
-            if (this.parameterResolver[x][y]) {
-              unresolvedDependencies[Object.keys(unresolvedDependencies)[0]][
-                key
-              ] = this.registry.get(this.parameterResolver[x][y]);
-              y += 1;
-            }
-          });
+          const i = Object.keys(unresolvedDependencies)[0];
+          if (i) {
+            Object.keys(unresolvedDependencies[i]).forEach((key) => {
+              if (this.parameterResolver[x][y]) {
+                unresolvedDependencies[Object.keys(unresolvedDependencies)[0]][
+                  key
+                ] = this.registry.get(this.parameterResolver[x][y]);
+                y += 1;
+              }
+            });
+          }
         }
       }
 
@@ -170,16 +163,31 @@ class Container implements ILeapContainer {
         if (typeof classAttributes[key][0].value === 'function') {
           const Dependency = classAttributes[key][0].value();
           this.registry.set(classAttributes[key][0].value(), new Dependency());
-          const match = this.classMetadata.find(
-            (metadata: { target: IConstructor<any> }) =>
-              metadata.target === Dependency,
-          );
-
-          if (match === undefined) {
-            klass[key] = this.resolve<typeof Dependency>(Dependency);
-            this.registry.set(Dependency, klass[key]);
+          let dependencyMetadata =
+            Reflect.getMetadata(LEAP_TAGGED_PARAMETERS, Dependency) ||
+            Reflect.getMetadata(LEAP_TAGGED_PROPERTIES, Dependency);
+          if (dependencyMetadata && typeof dependencyMetadata === 'object') {
+            [dependencyMetadata] = Object.values(dependencyMetadata);
+          }
+          if (dependencyMetadata && dependencyMetadata.length > 0) {
+            for (let j = 0; j < dependencyMetadata.length; j += 1) {
+              const match = this.classMetadata.find(
+                (metadata) => metadata.target === Dependency,
+              );
+              if (match === undefined) {
+                klass[key] = this.resolve(Dependency);
+              } else {
+                klass[key] = this.resolveConstructorDependencies(
+                  Target,
+                  Dependency,
+                  match,
+                );
+              }
+              this.registry.set(Dependency, klass[key]);
+            }
           } else {
-            klass[key] = this.registry.get(match.target);
+            klass[key] = new Dependency();
+            this.registry.set(Dependency, klass[key]);
           }
           this.propertyResolver.push(key);
           this.propertyResolver.push(Dependency);
