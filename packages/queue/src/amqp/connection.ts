@@ -1,5 +1,5 @@
 import { connect, Connection, Channel, Message } from 'amqplib';
-import { Logger, ILogger } from '@leapjs/common';
+import { Logger } from '@leapjs/common';
 
 class MqConnection {
   public connection!: Connection;
