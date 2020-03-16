@@ -36,6 +36,7 @@ class ExpressAdapter implements IHttpAdapter {
   private prefix!: string;
   private globalBeforeMiddlewares: any = [];
   private globalAfterMiddlewares: any = [];
+  private logger = Logger.getInstance();
 
   public init(container: ILeapContainer, prefix = ''): void {
     this.container = container;
@@ -51,7 +52,7 @@ class ExpressAdapter implements IHttpAdapter {
     this.bodyParser();
     this.cookieParser();
     if (options === undefined && whitelist === undefined) {
-      Logger.warn('No domains provided for cors origin filter', 'Router');
+      this.logger.warn('No domains provided for cors origin filter', 'Router');
     }
     this.cors(new Cors(options, whitelist));
     return this.app;

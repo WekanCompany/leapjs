@@ -17,6 +17,8 @@ class Scheduler {
   private frequencyPattern = '* * * * *';
   private scheduler!: CronJob;
   private publisher!: any;
+  private logger = Logger.getInstance();
+  private static logger = Logger.getInstance();
 
   constructor(publisher: any) {
     this.scheduler = new CronJob(
@@ -59,7 +61,7 @@ class Scheduler {
     if (!data.reschedule) {
       LeapJobModel.findByIdAndUpdate(job._id, { status }).catch(
         (error: any) => {
-          Logger.error('Error updating job status', error, 'Scheduler');
+          this.logger.error('Error updating job status', error, 'Scheduler');
         },
       );
     }
@@ -68,9 +70,9 @@ class Scheduler {
   }
 
   private async dispatcher(): Promise<void> {
-    Logger.log(`Starting up dispatcher ...`, 'Scheduler');
+    this.logger.log(`Starting up dispatcher ...`, 'Scheduler');
     if (!this.publisher.isConnected()) {
-      Logger.error('Publisher is undefined', '', 'Scheduler');
+      this.logger.error('Publisher is undefined', '', 'Scheduler');
       return;
     }
 
@@ -117,7 +119,11 @@ class Scheduler {
                 this.publisher
                   .queueJob(job.event, job, reschedule)
                   .catch((error: any) => {
-                    Logger.error('Failed to queue job', error, 'Scheduler');
+                    this.logger.error(
+                      'Failed to queue job',
+                      error,
+                      'Scheduler',
+                    );
                   });
               } catch (error) {
                 Scheduler.updateJobStatus(job, SchedulerJobStatus.COMPLETED);
@@ -132,14 +138,14 @@ class Scheduler {
               await job.save();
 
               this.publisher.queueJob(job.event, job).catch((error: any) => {
-                Logger.error('Failed to queue job', error, 'Scheduler');
+                this.logger.error('Failed to queue job', error, 'Scheduler');
               });
             }
           });
         }
       })
       .catch((error) => {
-        Logger.error('Error triggering jobs', error);
+        this.logger.error('Error triggering jobs', error);
       });
   }
 
@@ -151,7 +157,7 @@ class Scheduler {
     Scheduler.updateJobStatus(
       job,
       SchedulerJobStatus.COMPLETED,
-    ).catch((error) => Logger.error(error, '', 'Scheduler'));
+    ).catch((error) => this.logger.error(error, '', 'Scheduler'));
   }
 
   public start(): void {
@@ -215,10 +221,10 @@ class Scheduler {
       status: SchedulerJobStatus.CANCELLED,
     })
       .then(() => {
-        Logger.log(`${jobId} cancelled`, 'Scheduler');
+        this.logger.log(`${jobId} cancelled`, 'Scheduler');
       })
       .catch((error: any) => {
-        Logger.error('Error cancelling job', error, 'Scheduler');
+        this.logger.error('Error cancelling job', error, 'Scheduler');
       });
   }
 

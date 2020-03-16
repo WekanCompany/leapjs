@@ -8,14 +8,14 @@ class MqReceiver extends MqConnection {
     messageHandler: (msg: ConsumeMessage | null) => any,
     priority = 0,
   ): Promise<void> {
-    Logger.log(`Waiting for messages in ${queueName}`, 'Receiver');
+    this.logger.log(`Waiting for messages in ${queueName}`, 'Receiver');
 
     try {
       await this.channel.consume(queueName, messageHandler, {
         priority,
       });
     } catch (error) {
-      Logger.error('Error consuming messages', error, 'Receiver');
+      this.logger.error('Error consuming messages', error, 'Receiver');
     }
   }
 }

@@ -1,4 +1,4 @@
-import { Logger } from '@leapjs/common';
+import { Logger, inject } from '@leapjs/common';
 import { setApiKey, send as sendOne, sendMultiple } from '@sendgrid/mail';
 import { MailData } from '@sendgrid/helpers/classes/mail';
 import { readFileSync } from 'fs';
@@ -8,6 +8,8 @@ import { IMailTransport } from '../interfaces/mail';
 import { INVALID_ATTACHMENTS } from '../resources/strings';
 
 class Sendgrid implements IMailTransport {
+  private logger = Logger.getInstance();
+
   public init(apiKey: string): void {
     setApiKey(apiKey as any);
   }
@@ -42,17 +44,21 @@ class Sendgrid implements IMailTransport {
         }
       }
     } catch (error) {
-      Logger.error('Error attaching file(s)', error, 'Sendgrid');
+      this.logger.error('Error attaching file(s)', error, 'Sendgrid');
       return false;
     }
 
     return sendOne(mail)
       .then(() => {
-        Logger.log(`Sent mail to ${mail.to} successfully`, 'Sendgrid');
+        this.logger.log(`Sent mail to ${mail.to} successfully`, 'Sendgrid');
         return true;
       })
       .catch((error) => {
-        Logger.error('Error sending mail', error.response.body, 'Sendgrid');
+        this.logger.error(
+          'Error sending mail',
+          error.response.body,
+          'Sendgrid',
+        );
         return false;
       });
   }

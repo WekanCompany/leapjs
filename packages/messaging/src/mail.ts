@@ -20,6 +20,7 @@ class Mail {
   private render = { ejs: ejsRenderFile, pug: pugRenderFile };
   private mailTransport!: IMailTransport;
   private apiKey: string;
+  private logger = Logger.getInstance();
 
   private async renderTemplate(
     engine: 'ejs' | 'pug',
@@ -30,7 +31,7 @@ class Mail {
       // TODO Add handlebars support
       return Promise.resolve(this.render[engine](template, templateData)).catch(
         (error) => {
-          Logger.error('Failed to render template', error, 'Mailer');
+          this.logger.error('Failed to render template', error, 'Mailer');
           return Promise.reject(new Error(ERROR_RENDERING_TEMPLATE));
         },
       );
@@ -48,7 +49,7 @@ class Mail {
   }
 
   public static async defaultMailHandler(args: any): Promise<void> {
-    Logger.log(`Mail triggered ${args.content.toString()}`);
+    this.logger.log(`Mail triggered ${args.content.toString()}`);
 
     const message: {
       mailTransport: IMailTransport;
@@ -61,7 +62,7 @@ class Mail {
         receiver.ack(args);
       })
       .catch((error: any) => {
-        Logger.error('Send mail failed', error, 'Mailer');
+        this.logger.error('Send mail failed', error, 'Mailer');
       });
   }
 
@@ -87,7 +88,7 @@ class Mail {
         return this.mailTransport.send(body);
       })
       .catch((error: any) => {
-        Logger.error('Send mail failed', error, 'Mailer');
+        this.logger.error('Send mail failed', error, 'Mailer');
         return Promise.reject(new Error(error));
       });
   }

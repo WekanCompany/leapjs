@@ -1,4 +1,3 @@
-import { Logger } from '@leapjs/common';
 import { DocumentType } from '@typegoose/typegoose';
 import { LeapJob, Scheduler } from '@leapjs/scheduler';
 import MqConnection from './connection';
@@ -14,7 +13,7 @@ class MqPublisher extends MqConnection {
     try {
       this.sendToQueue(queueName, data);
     } catch (error) {
-      Logger.log(`Publish message failed ${error}`);
+      this.logger.log(`Publish message failed ${error}`);
     }
   }
 
@@ -30,7 +29,7 @@ class MqPublisher extends MqConnection {
       };
       this.sendToQueue(queueName, args);
     } catch (error) {
-      Logger.log(`Error sending job to the queue ${error}`);
+      this.logger.log(`Error sending job to the queue ${error}`);
       Scheduler.rescheduleJob(job);
     }
   }
