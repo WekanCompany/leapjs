@@ -110,11 +110,7 @@ function accessControl(
         ),
       );
     }
-    return next(
-      new Error(
-        'User access information not passed to access control middleware',
-      ),
-    );
+    return next(new Error('No permissions found'));
   };
 }
 
