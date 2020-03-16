@@ -2,6 +2,7 @@ import chalk from 'chalk';
 import injectable from '../decorators/core/injectable';
 import { ILogger } from '../interfaces/logger';
 import { logLevel } from '../definitions/logger';
+import { expandObject } from '../utils/helpers';
 
 @injectable()
 class Logger implements ILogger {
@@ -66,6 +67,10 @@ class Logger implements ILogger {
     return instance === this ? Logger : instance;
   }
 
+  public static getInstance(): typeof Logger | ILogger {
+    return this.instance;
+  }
+
   private call(
     name: 'log' | 'warn' | 'debug' | 'verbose',
     message: any,
@@ -111,7 +116,7 @@ class Logger implements ILogger {
   ): Promise<void> {
     Logger.print(chalk.red.bold(message), context);
     if (trace) {
-      Logger.print(chalk.red.bold(trace), context);
+      Logger.print(chalk.red.bold(expandObject(trace)), context);
     }
   }
 
