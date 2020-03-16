@@ -1,5 +1,4 @@
 import { ConsumeMessage } from 'amqplib';
-import { Logger } from '@leapjs/common';
 import MqConnection from './connection';
 
 class MqReceiver extends MqConnection {
