@@ -1,5 +1,5 @@
-import { Logger, inject } from '@leapjs/common';
-import { setApiKey, send as sendOne, sendMultiple } from '@sendgrid/mail';
+import { Logger } from '@leapjs/common';
+import { setApiKey, send as sendOne } from '@sendgrid/mail';
 import { MailData } from '@sendgrid/helpers/classes/mail';
 import { readFileSync } from 'fs';
 import { basename, resolve } from 'path';
