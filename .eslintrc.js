@@ -8,13 +8,14 @@ module.exports = {
   parser: '@typescript-eslint/parser',
   parserOptions: {
     project: [
+      './packages/access-control/tsconfig.json',
       './packages/common/tsconfig.json',
       './packages/core/tsconfig.json',
-      './packages/access-control/tsconfig.json',
-      './packages/scheduler/tsconfig.json',
+      './packages/crud/tsconfig.json',
+      './packages/messaging/tsconfig.json',
       './packages/queue/tsconfig.json',
       './packages/router/tsconfig.json',
-      './packages/messaging/tsconfig.json',
+      './packages/scheduler/tsconfig.json',
     ],
     sourceType: 'module',
   },
