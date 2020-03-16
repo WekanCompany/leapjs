@@ -203,8 +203,6 @@ class ExpressAdapter implements IHttpAdapter {
       if (controller.attributes) {
         let beforeControllerMiddlewares: any = [];
         let afterControllerMiddlewares: any = [];
-        let beforeMethodMiddlewares: any = [];
-        let afterMethodMiddlewares: any = [];
 
         const controllerMiddleware = Reflect.getMetadata(
           LEAP_ROUTER_MIDDLEWARE,
@@ -220,6 +218,9 @@ class ExpressAdapter implements IHttpAdapter {
         }
 
         controller.attributes.forEach((attribute: IAttributes) => {
+          let beforeMethodMiddlewares: any = [];
+          let afterMethodMiddlewares: any = [];
+
           const controllerMethodMiddleware = Reflect.getMetadata(
             LEAP_ROUTER_MIDDLEWARE,
             attribute.method,
