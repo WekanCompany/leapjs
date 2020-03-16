@@ -19,9 +19,9 @@ import {
 class Mail {
   private render = { ejs: ejsRenderFile, pug: pugRenderFile };
   private mailTransport!: IMailTransport;
+  private static mailTransportStatic: IMailTransport;
   private apiKey: string;
   private logger = Logger.getInstance();
-  private static logger = Logger.getInstance();
 
   private async renderTemplate(
     engine: 'ejs' | 'pug',
@@ -42,6 +42,7 @@ class Mail {
 
   constructor(mailTransport: IConstructor<any>, container: ILeapContainer) {
     this.mailTransport = container.resolve(mailTransport);
+    Mail.mailTransportStatic = this.mailTransport;
   }
 
   public init(apiKey: string): void {
@@ -50,20 +51,18 @@ class Mail {
   }
 
   public static async defaultMailHandler(args: any): Promise<void> {
-    this.logger.log(`Mail triggered ${args.content.toString()}`);
-
     const message: {
       mailTransport: IMailTransport;
       body: IMailOptions;
     } = JSON.parse(args.content);
 
-    await message.mailTransport
+    await Mail.mailTransportStatic
       .send(message.body)
       .then(() => {
         receiver.ack(args);
       })
       .catch((error: any) => {
-        this.logger.error('Send mail failed', error, 'Mailer');
+        Logger.getInstance().error('Send mail failed', error, 'Mailer');
       });
   }
 
@@ -73,7 +72,7 @@ class Mail {
       .then((html: string) => {
         body.html = html;
         if (publisher.isConnected()) {
-          publisher.send('mailer', { mailTransport: this.mailTransport, body });
+          publisher.send('mailer', { body });
         } else {
           Promise.reject(new Error(QUEUE_SEND_FAILED));
         }
