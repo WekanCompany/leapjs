@@ -17,7 +17,7 @@ class Scheduler {
   private frequencyPattern = '* * * * *';
   private scheduler!: CronJob;
   private publisher!: any;
-  private logger = Logger.getInstance();
+  // private logger = Logger.getInstance();
   private static logger = Logger.getInstance();
 
   constructor(publisher: any) {
@@ -70,9 +70,10 @@ class Scheduler {
   }
 
   private async dispatcher(): Promise<void> {
-    this.logger.log(`Starting up dispatcher ...`, 'Scheduler');
+    const logger = Logger.getInstance();
+    logger.log(`Starting up dispatcher ...`, 'Scheduler');
     if (!this.publisher.isConnected()) {
-      this.logger.error('Publisher is undefined', '', 'Scheduler');
+      logger.error('Publisher is undefined', '', 'Scheduler');
       return;
     }
 
@@ -119,11 +120,7 @@ class Scheduler {
                 this.publisher
                   .queueJob(job.event, job, reschedule)
                   .catch((error: any) => {
-                    this.logger.error(
-                      'Failed to queue job',
-                      error,
-                      'Scheduler',
-                    );
+                    logger.error('Failed to queue job', error, 'Scheduler');
                   });
               } catch (error) {
                 Scheduler.updateJobStatus(job, SchedulerJobStatus.COMPLETED);
@@ -138,14 +135,14 @@ class Scheduler {
               await job.save();
 
               this.publisher.queueJob(job.event, job).catch((error: any) => {
-                this.logger.error('Failed to queue job', error, 'Scheduler');
+                logger.error('Failed to queue job', error, 'Scheduler');
               });
             }
           });
         }
       })
       .catch((error) => {
-        this.logger.error('Error triggering jobs', error);
+        logger.error('Error triggering jobs', error);
       });
   }
 
