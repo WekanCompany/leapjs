@@ -21,6 +21,7 @@ class Mail {
   private mailTransport!: IMailTransport;
   private apiKey: string;
   private logger = Logger.getInstance();
+  private static logger = Logger.getInstance();
 
   private async renderTemplate(
     engine: 'ejs' | 'pug',
