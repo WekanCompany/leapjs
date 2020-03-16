@@ -1,4 +1,9 @@
-import { Logger, injectable } from '@leapjs/common';
+import {
+  Logger,
+  injectable,
+  ILeapContainer,
+  IConstructor,
+} from '@leapjs/common';
 import { receiver, publisher } from '@leapjs/queue';
 import { renderFile as ejsRenderFile } from 'ejs';
 import { renderFile as pugRenderFile } from 'pug';
@@ -33,8 +38,8 @@ class Mail {
     return Promise.reject(new Error(ENGINE_NOT_SUPPORTED));
   }
 
-  constructor(mailTransport: IMailTransport) {
-    this.mailTransport = mailTransport;
+  constructor(mailTransport: IConstructor<any>, container: ILeapContainer) {
+    this.mailTransport = container.resolve(mailTransport);
   }
 
   public init(apiKey: string): void {
