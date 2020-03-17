@@ -45,7 +45,7 @@ class Logger implements ILogger {
       const instance = this.getInstance();
       if (instance) {
         instance.error.call(
-          '',
+          instance,
           message,
           trace,
           this.context === '' ? context : this.context,
