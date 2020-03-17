@@ -52,7 +52,6 @@ class Mail {
 
   public static async defaultMailHandler(args: any): Promise<void> {
     const message: {
-      mailTransport: IMailTransport;
       body: IMailOptions;
     } = JSON.parse(args.content);
 
