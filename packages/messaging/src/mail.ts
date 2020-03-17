@@ -22,6 +22,7 @@ class Mail {
   private static mailTransportStatic: IMailTransport;
   private apiKey: string;
   private logger = Logger.getInstance();
+  private channel = 'mailer';
 
   private async renderTemplate(
     engine: 'ejs' | 'pug',
@@ -50,6 +51,10 @@ class Mail {
     this.mailTransport.init(this.apiKey);
   }
 
+  public setChannel(channel: string): void {
+    this.channel = channel;
+  }
+
   public static async defaultMailHandler(args: any): Promise<void> {
     const message: {
       body: IMailOptions;
@@ -71,7 +76,7 @@ class Mail {
       .then((html: string) => {
         body.html = html;
         if (publisher.isConnected()) {
-          publisher.send('mailer', { body });
+          publisher.send(this.channel, { body });
         } else {
           Promise.reject(new Error(QUEUE_SEND_FAILED));
         }
