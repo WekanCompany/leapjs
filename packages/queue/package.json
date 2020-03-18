@@ -1,6 +1,6 @@
 {
   "name": "@leapjs/queue",
-  "version": "0.5.19",
+  "version": "0.5.20",
   "author": "Sanchan Moses",
   "repository": {
     "type": "git",
@@ -20,8 +20,8 @@
     "test": "cross-env NODE_ENV=test TS_NODE_FILES=true nyc mocha"
   },
   "dependencies": {
-    "@leapjs/common": "^0.5.19",
-    "@leapjs/scheduler": "^0.5.19",
+    "@leapjs/common": "^0.5.20",
+    "@leapjs/scheduler": "^0.5.20",
     "amqplib": "0.5.5",
     "@types/amqplib": "0.5.13",
     "@typegoose/typegoose": "6.4.0",
