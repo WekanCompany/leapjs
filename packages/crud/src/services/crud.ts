@@ -25,6 +25,17 @@ class CrudService<T> {
       .catch((error: any): Promise<any> => Promise.reject(error));
   }
 
+  public async createMany(data: T[]): Promise<any> {
+    return this.model
+      .insertMany(data)
+      .then((result: Document[]): Document[] => result)
+      .catch((error: any): Promise<any> => Promise.reject(error));
+  }
+
+  public async replaceOne(query: {}, data: T): Promise<any> {
+    return this.updateOne(query, data);
+  }
+
   public async updateOne(query: {}, data: Partial<T>): Promise<any> {
     return this.model
       .findOneAndUpdate(query, data, { fields: this.updateFields, new: true })

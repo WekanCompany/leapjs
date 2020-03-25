@@ -1,4 +1,4 @@
-import CrudService from './services/abstract.service';
+import CrudService from './services/crud';
 import buildResultWithPagination from './utils/pagination';
 
 export { CrudService, buildResultWithPagination };
