@@ -4,7 +4,7 @@ import {
   LEAP_ROUTER_CONTROLLER_METHODS,
   InternalServerException,
 } from '@leapjs/common';
-import { ICrudControllerOptions } from 'src/interfaces/crud-controller';
+import { ICrudControllerOptions } from '../interfaces/crud-controller';
 import { addMethodMiddleware, addRoute } from '../utils/metadata';
 import crudMethods from '../constants';
 

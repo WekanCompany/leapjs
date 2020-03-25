@@ -2,7 +2,7 @@ import { ICrudControllerMethods } from './crud-controller-methods';
 
 export interface ICrudControllerOptions {
   baseRoute: string;
-  middleware?: [];
+  middleware?: { before: any[]; after: any[] };
   methods?: ICrudControllerMethods;
-  softDelete: boolean;
+  softDelete?: boolean;
 }
