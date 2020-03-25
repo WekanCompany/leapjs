@@ -15,6 +15,7 @@ import {
   InternalServerException,
 } from './exceptions/wrappers';
 import HttpException from './exceptions/http-exception';
+import mongoErrorHandler from './errors/handlers/database/mongo';
 
 import { IHttpAdapter } from './interfaces/http-adapter';
 import { ILogger } from './interfaces/logger';
@@ -25,6 +26,7 @@ import Logger from './services/logger';
 import { ctor, ServiceIdentifierOrFunc } from './definitions/injector';
 
 import inject from './decorators/core/inject';
+import injectValue from './decorators/core/inject-value';
 import Metadata from './classes/metadata';
 
 import {
@@ -46,53 +48,56 @@ import {
   pad,
   addToDate,
 } from './utils/helpers';
-import { ILeapContainer } from './interfaces/container';
+
 import { BindingScope } from './definitions/binding';
+import { ILeapContainer } from './interfaces/container';
 import { IContainerOptions } from './interfaces/container-options';
 import { IIdentifier } from './interfaces/identifier';
 import { ILeapApplicationOptions } from './interfaces/application-options';
-import mongoErrorHandler from './errors/handlers/database/mongo';
+import { IRouteMetadata } from './interfaces/route-metadata';
 
 export {
-  Metadata,
-  DESIGN_PARAM_TYPES,
-  LEAP_PARAM_TYPES,
-  LEAP_TAGGED_PARAMETERS,
-  LEAP_TAGGED_PROPERTIES,
-  LEAP_ROUTER_CONTROLLER_METHODS,
-  LEAP_ROUTER_MIDDLEWARE,
-  HttpStatus,
-  inject,
-  injectable,
-  BadRequestException,
-  UnauthorizedException,
-  ForbiddenException,
-  NotFoundException,
-  NotAcceptableException,
-  ConflictException,
-  ValidationException,
-  InternalServerException,
-  HttpException,
-  IHttpAdapter,
-  ILogger,
-  IConstructor,
-  Logger,
-  registerCleanup,
-  ctor,
-  ServiceIdentifierOrFunc,
-  HTTP_METHODS,
   addMethodMetadata,
   addMethodParamsMetadata,
+  IRouteMetadata,
+  addToDate,
+  BadRequestException,
+  BindingScope,
+  ConflictException,
+  ctor,
+  DESIGN_PARAM_TYPES,
   expandObject,
   findMatching,
-  isClass,
+  ForbiddenException,
   getRandom,
-  pad,
-  addToDate,
-  mongoErrorHandler,
-  ILeapContainer,
-  BindingScope,
+  HTTP_METHODS,
+  HttpException,
+  HttpStatus,
+  IConstructor,
   IContainerOptions,
+  IHttpAdapter,
   IIdentifier,
   ILeapApplicationOptions,
+  ILeapContainer,
+  ILogger,
+  inject,
+  injectable,
+  injectValue,
+  InternalServerException,
+  isClass,
+  LEAP_PARAM_TYPES,
+  LEAP_ROUTER_CONTROLLER_METHODS,
+  LEAP_ROUTER_MIDDLEWARE,
+  LEAP_TAGGED_PARAMETERS,
+  LEAP_TAGGED_PROPERTIES,
+  Logger,
+  Metadata,
+  mongoErrorHandler,
+  NotAcceptableException,
+  NotFoundException,
+  pad,
+  registerCleanup,
+  ServiceIdentifierOrFunc,
+  UnauthorizedException,
+  ValidationException,
 };
