@@ -51,9 +51,14 @@ function CrudController(options: ICrudControllerOptions): Function {
                 }
               }
             }
-            addRoute(methodData[0], target, method[0], method[1][0], [
-              ...methodData[1],
-            ]);
+            addRoute(
+              methodData[0],
+              options.model,
+              target,
+              method[0],
+              method[1][0],
+              [...methodData[1]],
+            );
           }
         }
       });

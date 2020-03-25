@@ -29,21 +29,15 @@ function addMethodMiddleware(
 
 function addRoute(
   method: string,
+  model: IConstructor<any>,
   target: IConstructor<any>,
   methodName: string,
   route: string,
   params: [string, string][],
 ): void {
-  const metadata: IRouteMetadata[] = [];
+  let metadata!: IConstructor<any>;
   for (let i = 0; i < params.length; i += 1) {
-    metadata[i] = {
-      type: params[i][0],
-      target: target.prototype,
-      methodName,
-      index: i,
-      name: params[i][1],
-      options: undefined,
-    };
+    metadata[i] = model;
     addMethodParamsMetadata(
       params[i][0],
       target.prototype,
