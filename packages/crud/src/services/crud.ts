@@ -17,61 +17,50 @@ class CrudService<T> {
     this.updateFields = updateFields;
   }
 
-  public async createOne(data: T): Promise<any> {
+  public async createOne(data: T): Promise<Document> {
     // eslint-disable-next-line new-cap
-    return new this.model(data)
-      .save()
-      .then((result: Document): Document => result)
-      .catch((error: any): Promise<any> => Promise.reject(error));
+    return new this.model(data).save();
   }
 
-  public async createMany(data: T[]): Promise<any> {
-    return this.model
-      .insertMany(data)
-      .then((result: Document[]): Document[] => result)
-      .catch((error: any): Promise<any> => Promise.reject(error));
+  public async createMany(data: T[]): Promise<Document[]> {
+    return this.model.insertMany(data);
   }
 
   public async replaceOne(query: {}, data: T): Promise<any> {
     return this.updateOne(query, data);
   }
 
-  public async updateOne(query: {}, data: Partial<T>): Promise<any> {
-    return this.model
+  public async updateOne(
+    query: {},
+    data: Partial<T>,
+  ): Promise<Document | null> {
+    const result = await this.model
       .findOneAndUpdate(query, data, { fields: this.updateFields, new: true })
-      .exec()
-      .then((result: any): {} => {
-        if (!result) {
-          throw new NotFoundException(`${this.model.modelName} not found`);
-        }
-        return result;
-      })
-      .catch((error: any): any => Promise.reject(error));
+      .exec();
+    if (!result) {
+      throw new NotFoundException(`${this.model.modelName} not found`);
+    }
+    return result;
   }
 
   public async getOne(
     query?: {},
     fields?: string,
     populate?: string,
-  ): Promise<any> {
+  ): Promise<Pick<Document, '_id'> | null> {
     const filter = query !== undefined ? query : {};
-    return this.model
+    const result = await this.model
       .findOne(filter)
       .select(
         fields !== undefined ? fields.replace(/,/g, ' ') : this.defaultFields,
       )
       .populate(populate)
       .lean()
-      .exec()
-      .then(
-        (result: any): Partial<T> => {
-          if (!result) {
-            throw new NotFoundException(`${this.model.modelName} not found`);
-          }
-          return result;
-        },
-      )
-      .catch((error: any): Promise<any> => Promise.reject(error));
+      .exec();
+    if (!result) {
+      throw new NotFoundException(`${this.model.modelName} not found`);
+    }
+    return result;
   }
 
   public async getMany(
@@ -81,14 +70,13 @@ class CrudService<T> {
     offset?: number,
     limit?: number,
     populate?: string,
-  ): Promise<any> {
+  ): Promise<[Pick<Document, '_id'>[], number]> {
     const filter = query !== undefined ? query : {};
-
     const sortby: any = {};
     // eslint-disable-next-line prefer-destructuring
     sortby[sort[0]] = sort[1];
 
-    return this.model
+    const result = await this.model
       .find(
         filter,
         fields !== undefined ? fields.replace(/,/g, ' ') : this.defaultFields,
@@ -96,29 +84,19 @@ class CrudService<T> {
       )
       .populate(populate !== undefined ? populate.replace(/,/g, ' ') : '')
       .lean()
-      .exec()
-      .then(
-        async (result: any[]): Promise<[T[], number]> => {
-          const count = await this.model.countDocuments(filter).exec();
-          return [result, count];
-        },
-      )
-      .catch((error: any): Promise<any> => Promise.reject(error));
+      .exec();
+    const count = await this.model.countDocuments(filter).exec();
+    return [result, count];
   }
 
   public async deleteOne(id: any): Promise<IDeleteResponse> {
-    return this.model
+    const result: IDeleteResponse = await this.model
       .deleteOne({ _id: id })
-      .exec()
-      .then(
-        (result: IDeleteResponse): IDeleteResponse => {
-          if (result.deletedCount === 0) {
-            throw new NotFoundException(`${this.model.modelName} not found`);
-          }
-          return result;
-        },
-      )
-      .catch((error: any): Promise<any> => Promise.reject(error));
+      .exec();
+    if (result.deletedCount === 0) {
+      throw new NotFoundException(`${this.model.modelName} not found`);
+    }
+    return result;
   }
 }
 
