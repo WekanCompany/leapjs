@@ -43,14 +43,16 @@ class CrudController<T> {
   public async getOne(
     id: string,
     fields: string,
+    expand: string,
     res: Response,
   ): Promise<Response> {
-    const data = await this.service.getOne({ _id: id }, fields);
+    const data = await this.service.getOne({ _id: id }, fields, expand);
     return res.status(HttpStatus.OK).json({ data: { role: data } });
   }
 
   public async getMany(
     fields: string,
+    expand: string,
     sort = 'id|asc',
     page = 0,
     perPage = 10,
@@ -66,13 +68,14 @@ class CrudController<T> {
       fields,
       page,
       perPage,
+      expand,
     );
     return res
       .status(HttpStatus.OK)
       .json(buildResultWithPagination('roles', data, page, perPage));
   }
 
-  public async deleteOne(id: string, req: any, res: Response): Promise<void> {
+  public async deleteOne(id: string, res: Response): Promise<void> {
     await this.service.deleteOne(id);
     return res.status(HttpStatus.NO_CONTENT).end();
   }
