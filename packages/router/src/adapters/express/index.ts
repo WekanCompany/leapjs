@@ -311,11 +311,13 @@ class ExpressAdapter implements IHttpAdapter {
 
             return controller.class[registeredClass.method.name](...params)
               .then((result: any) => {
-                const req: any = request;
-                req.result = result;
-                // eslint-disable-next-line no-param-reassign
-                request = req;
-                return next();
+                if (!response.headersSent) {
+                  const req: any = request;
+                  req.result = result;
+                  // eslint-disable-next-line no-param-reassign
+                  request = req;
+                  return next();
+                }
               })
               .catch((error: any) => next(error));
           }
