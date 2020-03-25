@@ -3,6 +3,7 @@ import {
   addMethodParamsMetadata,
   LEAP_ROUTER_MIDDLEWARE,
   IConstructor,
+  IRouteMetadata,
   DESIGN_PARAM_TYPES,
 } from '@leapjs/common';
 
@@ -33,20 +34,16 @@ function addRoute(
   route: string,
   params: [string, string][],
 ): void {
+  const metadata: IRouteMetadata[] = [];
   for (let i = 0; i < params.length; i += 1) {
-    Reflect.defineMetadata(
-      DESIGN_PARAM_TYPES,
-      {
-        type: params[i][0],
-        target: target.prototype,
-        methodName,
-        index: i,
-        name: params[i][1],
-        options: undefined,
-      },
-      target,
+    metadata[i] = {
+      type: params[i][0],
+      target: target.prototype,
       methodName,
-    );
+      index: i,
+      name: params[i][1],
+      options: undefined,
+    };
     addMethodParamsMetadata(
       params[i][0],
       target.prototype,
@@ -55,12 +52,18 @@ function addRoute(
       params[i][1],
     );
   }
+  Reflect.defineMetadata(
+    DESIGN_PARAM_TYPES,
+    metadata,
+    target.prototype,
+    methodName,
+  );
   addMethodMetadata(
     method,
     target.prototype,
     methodName,
     {
-      value: target.prototype.createOne,
+      value: target.prototype[methodName],
       writable: true,
       enumerable: false,
       configurable: true,
