@@ -1,19 +1,21 @@
-const crudMethods = new Map<string, [string, [string, string][]]>();
-crudMethods.set('createOne', [
+import { ICrudControllerMethods } from 'src/interfaces/crud-controller-methods';
+
+const crudMethodParams = new Map<string, [string, [string, string][]]>();
+crudMethodParams.set('createOne', [
   'post',
   [
     ['body', ''],
     ['response', ''],
   ],
 ]);
-crudMethods.set('createMany', [
+crudMethodParams.set('createMany', [
   'post',
   [
     ['body', ''],
     ['response', ''],
   ],
 ]);
-crudMethods.set('updateOne', [
+crudMethodParams.set('updateOne', [
   'patch',
   [
     ['param', 'id'],
@@ -21,7 +23,7 @@ crudMethods.set('updateOne', [
     ['response', ''],
   ],
 ]);
-crudMethods.set('replaceOne', [
+crudMethodParams.set('replaceOne', [
   'put',
   [
     ['param', 'id'],
@@ -29,7 +31,7 @@ crudMethods.set('replaceOne', [
     ['response', ''],
   ],
 ]);
-crudMethods.set('getOne', [
+crudMethodParams.set('getOne', [
   'get',
   [
     ['param', 'id'],
@@ -38,7 +40,7 @@ crudMethods.set('getOne', [
     ['response', ''],
   ],
 ]);
-crudMethods.set('getMany', [
+crudMethodParams.set('getMany', [
   'get',
   [
     ['query', 'fields'],
@@ -49,7 +51,7 @@ crudMethods.set('getMany', [
     ['response', ''],
   ],
 ]);
-crudMethods.set('deleteOne', [
+crudMethodParams.set('deleteOne', [
   'delete',
   [
     ['param', 'id'],
@@ -57,4 +59,4 @@ crudMethods.set('deleteOne', [
   ],
 ]);
 
-export default crudMethods;
+export default crudMethodParams;
