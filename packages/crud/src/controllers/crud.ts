@@ -1,6 +1,6 @@
 import { Response } from 'express';
 import { HttpStatus } from '@leapjs/common';
-import buildResultWithPagination from 'src/utils/pagination';
+import buildResultWithPagination from '../utils/pagination';
 import CrudService from '../services/crud';
 
 class CrudController<T> {
