@@ -1,7 +1,7 @@
-import CrudService from 'src/services/crud';
 import { Response } from 'express';
 import { HttpStatus } from '@leapjs/common';
 import buildResultWithPagination from 'src/utils/pagination';
+import CrudService from '../services/crud';
 
 class CrudController<T> {
   private service!: CrudService<T>;
