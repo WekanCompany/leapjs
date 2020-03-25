@@ -1,25 +1,32 @@
 import { Response } from 'express';
 import { HttpStatus } from '@leapjs/common';
+import pluralize from 'pluralize';
 import buildResultWithPagination from '../utils/pagination';
 import CrudService from '../services/crud';
 
 class CrudController<T> {
   private service!: CrudService<T>;
+  private singularModelName!: string;
+  private pluralModelName!: string;
 
   constructor(service: CrudService<T>) {
     this.service = service;
+    this.singularModelName = this.service.getModelName().toLowerCase();
+    this.pluralModelName = pluralize(this.singularModelName);
   }
 
   public async createOne(data: T, res: Response): Promise<Response> {
     const savedData = await this.service.createOne(data);
-    return res
-      .status(HttpStatus.CREATED)
-      .json({ data: { role: { _id: savedData._id } } });
+    const result = { data: {} };
+    result.data[this.singularModelName] = { _id: savedData._id };
+    return res.status(HttpStatus.CREATED).json(result);
   }
 
   public async createMany(data: T[], res: Response): Promise<Response> {
     const savedData = await this.service.createMany(data);
-    return res.status(HttpStatus.CREATED).json({ data: { roles: savedData } });
+    const result = { data: {} };
+    result.data[this.pluralModelName] = savedData;
+    return res.status(HttpStatus.CREATED).json(result);
   }
 
   public async replaceOne(
@@ -28,7 +35,9 @@ class CrudController<T> {
     res: Response,
   ): Promise<Response> {
     const updatedData = await this.service.replaceOne({ _id: id }, data);
-    return res.status(HttpStatus.OK).json({ data: { role: updatedData } });
+    const result = { data: {} };
+    result.data[this.singularModelName] = updatedData;
+    return res.status(HttpStatus.OK).json(result);
   }
 
   public async updateOne(
@@ -37,7 +46,9 @@ class CrudController<T> {
     res: Response,
   ): Promise<Response> {
     const updatedData = await this.service.updateOne({ _id: id }, data);
-    return res.status(HttpStatus.OK).json({ data: { role: updatedData } });
+    const result = { data: {} };
+    result.data[this.singularModelName] = updatedData;
+    return res.status(HttpStatus.OK).json(result);
   }
 
   public async getOne(
@@ -47,7 +58,9 @@ class CrudController<T> {
     res: Response,
   ): Promise<Response> {
     const data = await this.service.getOne({ _id: id }, fields, expand);
-    return res.status(HttpStatus.OK).json({ data: { role: data } });
+    const result = { data: {} };
+    result.data[this.singularModelName] = data;
+    return res.status(HttpStatus.OK).json(result);
   }
 
   public async getMany(
@@ -72,7 +85,9 @@ class CrudController<T> {
     );
     return res
       .status(HttpStatus.OK)
-      .json(buildResultWithPagination('roles', data, page, perPage));
+      .json(
+        buildResultWithPagination(this.pluralModelName, data, page, perPage),
+      );
   }
 
   public async deleteOne(id: string, res: Response): Promise<void> {
