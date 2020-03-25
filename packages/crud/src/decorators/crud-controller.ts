@@ -1,12 +1,12 @@
 import {
   LEAP_PARAM_TYPES,
   IConstructor,
-  LEAP_ROUTER_CONTROLLER_METHODS,
   InternalServerException,
+  DESIGN_PARAM_TYPES,
 } from '@leapjs/common';
 import { ICrudControllerOptions } from '../interfaces/crud-controller';
 import { addMethodMiddleware, addRoute } from '../utils/metadata';
-import crudMethods from '../constants';
+import crudMethodParams from '../constants';
 
 function CrudController(options: ICrudControllerOptions): Function {
   return function wrapper(target: IConstructor<any>): void {
@@ -17,39 +17,43 @@ function CrudController(options: ICrudControllerOptions): Function {
     if (options.methods) {
       Object.entries(options.methods).forEach((method: any) => {
         if (method[1] !== false) {
-          const methodData = crudMethods.get(method[0]);
+          const methodData = crudMethodParams.get(method[0]);
           if (!methodData) {
             throw new InternalServerException(
               'CRUD method parameter map not populated',
             );
           }
           const metadata = Reflect.getMetadata(
-            LEAP_ROUTER_CONTROLLER_METHODS,
+            DESIGN_PARAM_TYPES,
             target.prototype,
             method[0],
           );
-          if (
-            metadata &&
-            'propertyKey' in metadata[0] &&
-            metadata[0].propertyKey !== method[0]
-          ) {
-            for (let i = 0; i < method[1][1].before.length; i += 1) {
-              addMethodMiddleware(
-                target,
-                method[0],
-                'before',
-                method[1][1].before[i],
-              );
+          if (metadata === undefined) {
+            if (method[1].length === 2) {
+              if ('before' in method[1][1]) {
+                for (let i = 0; i < method[1][1].before.length; i += 1) {
+                  addMethodMiddleware(
+                    target,
+                    method[0],
+                    'before',
+                    method[1][1].before[i],
+                  );
+                }
+              }
+              if ('after' in method[1][1]) {
+                for (let i = 0; i < method[1][1].after.length; i += 1) {
+                  addMethodMiddleware(
+                    target,
+                    method[0],
+                    'after',
+                    method[1][1].after[i],
+                  );
+                }
+              }
             }
-            for (let i = 0; i < method[1][1].after.length; i += 1) {
-              addMethodMiddleware(
-                target,
-                method[0],
-                'after',
-                method[1][1].before[i],
-              );
-            }
-            addRoute(methodData[0], target, method[0], '', [...methodData[1]]);
+            addRoute(methodData[0], target, method[0], method[1][0], [
+              ...methodData[1],
+            ]);
           }
         }
       });
