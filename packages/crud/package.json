@@ -21,6 +21,10 @@
   },
   "dependencies": {
     "@leapjs/common": "^0.5.26",
-    "mongoose": "^5.9.6"
+    "mongoose": "^5.9.6",
+    "pluralize": "^8.0.0"
+  },
+  "devDependencies": {
+    "@types/pluralize": "^0.0.29"
   }
 }
