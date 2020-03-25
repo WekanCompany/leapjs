@@ -17,6 +17,10 @@ class CrudService<T> {
     this.updateFields = updateFields;
   }
 
+  public getModelName(): string {
+    return this.model.name;
+  }
+
   public async createOne(data: T): Promise<Document> {
     // eslint-disable-next-line new-cap
     return new this.model(data).save();
@@ -26,7 +30,7 @@ class CrudService<T> {
     return this.model.insertMany(data);
   }
 
-  public async replaceOne(query: {}, data: T): Promise<any> {
+  public async replaceOne(query: {}, data: T): Promise<Document | null> {
     return this.updateOne(query, data);
   }
 
@@ -47,7 +51,7 @@ class CrudService<T> {
     query?: {},
     fields?: string,
     populate?: string,
-  ): Promise<Pick<Document, '_id'> | null> {
+  ): Promise<Record<string, any> | null> {
     const filter = query !== undefined ? query : {};
     const result = await this.model
       .findOne(filter)
@@ -70,7 +74,7 @@ class CrudService<T> {
     offset?: number,
     limit?: number,
     populate?: string,
-  ): Promise<[Pick<Document, '_id'>[], number]> {
+  ): Promise<[Record<string, any>[], number]> {
     const filter = query !== undefined ? query : {};
     const sortby: any = {};
     // eslint-disable-next-line prefer-destructuring
