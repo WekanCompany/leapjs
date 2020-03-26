@@ -30,14 +30,11 @@ class CrudService<T> {
     return this.model.insertMany(data);
   }
 
-  public async replaceOne(query: {}, data: T): Promise<Document | null> {
+  public async replaceOne(query: {}, data: T): Promise<Document> {
     return this.updateOne(query, data);
   }
 
-  public async updateOne(
-    query: {},
-    data: Partial<T>,
-  ): Promise<Document | null> {
+  public async updateOne(query: {}, data: Partial<T>): Promise<Document> {
     const result = await this.model
       .findOneAndUpdate(query, data, { fields: this.updateFields, new: true })
       .exec();
@@ -51,7 +48,7 @@ class CrudService<T> {
     query?: {},
     fields?: string,
     populate?: string,
-  ): Promise<Record<string, any> | null> {
+  ): Promise<Record<string, any>> {
     const filter = query !== undefined ? query : {};
     const result = await this.model
       .findOne(filter)
