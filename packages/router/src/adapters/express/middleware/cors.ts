@@ -1,24 +1,13 @@
-import express from 'express';
-import cors from 'cors';
 import { ORIGIN_BLOCKED } from '../../../resources/strings';
 
 class Cors {
-  private whitelist!: string[];
-  private options: cors.CorsOptions;
+  private static whitelist: string[];
 
-  constructor(options?: cors.CorsOptions, whitelist?: string[]) {
-    this.options = options || {
-      origin: this.corsOriginFilter,
-      credentials: true,
-    };
-    this.whitelist = whitelist || ['http://localhost'];
+  public static setWhitelist(whitelist: string[]): void {
+    this.whitelist = whitelist;
   }
 
-  public cors(server: express.Express): void {
-    server.use(cors(this.options));
-  }
-
-  public corsOriginFilter(
+  public static corsOriginFilter(
     origin: string | undefined,
     callback: (err: Error | null, allow?: boolean) => void,
   ): void {

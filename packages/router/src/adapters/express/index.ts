@@ -15,9 +15,9 @@ import {
 } from '@leapjs/common';
 import { ParamsDictionary } from 'express-serve-static-core';
 import cookieParser from 'cookie-parser';
-import { CorsOptions } from 'cors';
+import cors, { CorsOptions } from 'cors';
 import ServerRegistry from '../../registry';
-import Cors from './middleware/cors';
+
 import {
   CLASS_NOT_FOUND,
   PARAM_TYPE_METADATA_NOT_FOUND,
@@ -27,6 +27,7 @@ import {
 import { IController } from '../../interfaces/controller';
 import { IAttributes } from '../../interfaces/attributes';
 import { IMethodParams } from '../../interfaces/method-params';
+import Cors from './middleware/cors';
 
 // TODO refactor
 class ExpressAdapter implements IHttpAdapter {
@@ -54,7 +55,7 @@ class ExpressAdapter implements IHttpAdapter {
     if (options === undefined && whitelist === undefined) {
       this.logger.warn('No domains provided for cors origin filter', 'Router');
     }
-    this.cors(new Cors(options, whitelist));
+    this.cors(options, whitelist || ['http://localhost']);
     return this.app;
   }
 
@@ -67,8 +68,11 @@ class ExpressAdapter implements IHttpAdapter {
     this.app.use(cookieParser());
   }
 
-  public cors(cors: Cors): void {
-    cors.cors(this.app);
+  public cors(options: any, whielist: string[]): void {
+    Cors.setWhitelist(whielist);
+    this.app.use(
+      cors(options || { origin: Cors.corsOriginFilter, credentials: true }),
+    );
   }
 
   public listen(port: number, host = 'localhost'): void {
