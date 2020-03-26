@@ -35,7 +35,7 @@ function addRoute(
   route: string,
   params: [string, string][],
 ): void {
-  let metadata!: IConstructor<any>;
+  const metadata: IConstructor<any>[] = [];
   for (let i = 0; i < params.length; i += 1) {
     metadata[i] = model;
     addMethodParamsMetadata(
