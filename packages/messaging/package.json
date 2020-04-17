@@ -23,7 +23,7 @@
     "@leapjs/common": "^0.5.28",
     "@leapjs/queue": "^0.5.28",
     "@sendgrid/helpers": "6.5.3",
-    "@sendgrid/mail": "6.4.0",
+    "@sendgrid/mail": "6.5.5",
     "ejs": "3.0.1",
     "mime-types": "2.1.25",
     "pug": "2.0.4",
