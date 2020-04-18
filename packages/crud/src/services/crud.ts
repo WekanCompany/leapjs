@@ -17,8 +17,8 @@ class CrudService<T> {
     this.updateFields = updateFields;
   }
 
-  public getModelName(): string {
-    return this.model.name;
+  public getModelName(): Model<Document> {
+    return this.model;
   }
 
   public async createOne(data: T): Promise<Document> {

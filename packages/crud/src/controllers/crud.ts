@@ -11,7 +11,9 @@ class CrudController<T> {
 
   constructor(service: CrudService<T>) {
     this.service = service;
-    this.singularModelName = this.service.getModelName().toLowerCase();
+    this.singularModelName = Object.values(
+      this.service.getModelName(),
+    )[2].toLowerCase();
     this.pluralModelName = pluralize(this.singularModelName);
   }
 
@@ -67,26 +69,36 @@ class CrudController<T> {
     fields: string,
     expand: string,
     sort = 'id|asc',
-    page = 0,
-    perPage = 10,
+    page: number,
+    perPage: number,
     res: Response,
   ): Promise<Response> {
     let sortByArr = sort.split('|');
     if (!['asc', 'desc'].includes(sortByArr[1])) {
       sortByArr = ['id', 'asc'];
     }
+    let offset = page;
+    let limit = 10;
+
+    if (page) {
+      offset = Number(page);
+    }
+    if (perPage) {
+      limit = Number(perPage);
+    }
+
     const data = await this.service.getMany(
       sortByArr,
       {},
       fields,
-      page,
-      perPage,
+      offset,
+      limit,
       expand,
     );
     return res
       .status(HttpStatus.OK)
       .json(
-        buildResultWithPagination(this.pluralModelName, data, page, perPage),
+        buildResultWithPagination(this.pluralModelName, data, offset, limit),
       );
   }
 
