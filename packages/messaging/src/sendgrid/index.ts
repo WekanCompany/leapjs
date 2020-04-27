@@ -1,6 +1,6 @@
 import { Logger } from '@leapjs/common';
 import { setApiKey, send as sendOne } from '@sendgrid/mail';
-import { MailData } from '@sendgrid/helpers/classes/mail';
+import { MailDataRequired } from '@sendgrid/helpers/classes/mail';
 import { readFileSync } from 'fs';
 import { basename, resolve } from 'path';
 import { lookup } from 'mime-types';
@@ -15,12 +15,13 @@ class Sendgrid implements IMailTransport {
   }
 
   public async send(message: any): Promise<boolean> {
-    const mail: MailData = { from: '' };
-    mail.from = message.from;
-    mail.to = message.to;
-    mail.subject = message.subject;
-    mail.text = message.text || '';
-    mail.html = message.html;
+    const mail: MailDataRequired = {
+      from: message.from,
+      to: message.to,
+      subject: message.subject,
+      text: message.text || '',
+      html: message.html,
+    };
 
     try {
       if (message.attachments) {
