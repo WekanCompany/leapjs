@@ -47,7 +47,7 @@ crudMethodParams.set('getMany', [
     ['query', 'expand'],
     ['query', 'sort'],
     ['query', 'page'],
-    ['query', 'per_page'],
+    ['query', 'perPage'],
     ['response', ''],
   ],
 ]);
