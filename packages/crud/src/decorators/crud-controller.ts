@@ -4,7 +4,7 @@ import {
   InternalServerException,
   DESIGN_PARAM_TYPES,
 } from '@leapjs/common';
-import { DUPLICATED_ROUTABLE_DECORATOR } from 'src/resources/strings';
+import { DUPLICATED_ROUTABLE_DECORATOR } from '../resources/strings';
 import { ICrudControllerOptions } from '../interfaces/crud-controller';
 import { addMethodMiddleware, addRoute } from '../utils/metadata';
 import crudMethodParams from '../constants';
