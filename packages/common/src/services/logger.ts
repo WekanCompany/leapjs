@@ -54,6 +54,10 @@ class Logger implements ILogger {
     }
   }
 
+  public setContext(context: string): void {
+    this.context = context;
+  }
+
   public async verbose(message: any, context = ''): Promise<void> {
     this.call('verbose', message, this.context === '' ? context : this.context);
   }
