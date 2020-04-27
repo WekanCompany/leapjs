@@ -15,7 +15,11 @@ function addMethodMiddleware(
 ): void {
   const existingMetadata: any = [];
   const klass = methodName ? target.prototype[methodName] : target.prototype;
-  const middlewares = Reflect.getMetadata(LEAP_ROUTER_MIDDLEWARE, klass);
+  const middlewares = Reflect.getMetadata(
+    LEAP_ROUTER_MIDDLEWARE,
+    target.prototype,
+    methodName,
+  );
   if (middlewares) {
     existingMetadata.push(...middlewares);
   }
@@ -24,7 +28,12 @@ function addMethodMiddleware(
     type,
     target: klass,
   });
-  Reflect.defineMetadata(LEAP_ROUTER_MIDDLEWARE, existingMetadata, klass);
+  Reflect.defineMetadata(
+    LEAP_ROUTER_MIDDLEWARE,
+    existingMetadata,
+    target.prototype,
+    methodName,
+  );
 }
 
 function addRoute(

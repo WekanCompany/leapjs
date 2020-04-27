@@ -4,6 +4,7 @@ import {
   InternalServerException,
   DESIGN_PARAM_TYPES,
 } from '@leapjs/common';
+import { DUPLICATED_ROUTABLE_DECORATOR } from 'src/resources/strings';
 import { ICrudControllerOptions } from '../interfaces/crud-controller';
 import { addMethodMiddleware, addRoute } from '../utils/metadata';
 import crudMethodParams from '../constants';
@@ -11,7 +12,7 @@ import crudMethodParams from '../constants';
 function CrudController(options: ICrudControllerOptions): Function {
   return function wrapper(target: IConstructor<any>): void {
     if (Reflect.hasOwnMetadata(LEAP_PARAM_TYPES, target)) {
-      throw new Error('DUPLICATED_ROUTABLE_DECORATOR');
+      throw new Error(DUPLICATED_ROUTABLE_DECORATOR);
     }
 
     if (options.methods) {
