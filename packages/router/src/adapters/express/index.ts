@@ -236,7 +236,8 @@ class ExpressAdapter implements IHttpAdapter {
 
           const controllerMethodMiddleware = Reflect.getMetadata(
             LEAP_ROUTER_MIDDLEWARE,
-            attribute.method,
+            controller.class,
+            attribute.method.name,
           );
 
           if (controllerMethodMiddleware) {
