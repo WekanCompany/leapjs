@@ -226,6 +226,14 @@ class ExpressAdapter implements IHttpAdapter {
           let beforeMethodMiddlewares: any = [];
           let afterMethodMiddlewares: any = [];
 
+          const kontroller: any = controller;
+
+          if (kontroller.class.prototype !== undefined) {
+            kontroller.class = this.container.resolve<typeof controller.class>(
+              controller.class.prototype.constructor,
+            );
+          }
+
           const controllerMethodMiddleware = Reflect.getMetadata(
             LEAP_ROUTER_MIDDLEWARE,
             attribute.method,
@@ -237,14 +245,6 @@ class ExpressAdapter implements IHttpAdapter {
             );
             beforeMethodMiddlewares = before;
             afterMethodMiddlewares = after;
-          }
-
-          const kontroller: any = controller;
-
-          if (kontroller.class.prototype !== undefined) {
-            kontroller.class = this.container.resolve<typeof controller.class>(
-              controller.class.prototype.constructor,
-            );
           }
 
           function routeHandler(

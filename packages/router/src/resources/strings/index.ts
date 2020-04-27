@@ -3,7 +3,7 @@ const PARAM_TYPE_METADATA_NOT_FOUND = 'Param type metadata not found';
 const ORIGIN_BLOCKED = 'Origin is blocked by the CORS policy';
 
 const DUPLICATED_ROUTABLE_DECORATOR =
-  'Cannot apply multiple decorators (@injectable, @middleware or @controller) to the same object';
+  'Cannot add multiple DI decorators (@crud, @injectable, @middleware or @controller) to the same class';
 
 const INVALID_BEFORE_MIDDLEWARE_CLASS =
   'middleware class must contain a before method';
