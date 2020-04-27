@@ -1,6 +1,6 @@
 {
   "name": "@leapjs/core",
-  "version": "0.5.29",
+  "version": "0.5.30",
   "author": "Sanchan Moses",
   "repository": {
     "type": "git",
@@ -23,10 +23,10 @@
     "test": "cross-env NODE_ENV=test TS_NODE_FILES=true nyc mocha"
   },
   "dependencies": {
-    "@leapjs/common": "^0.5.29",
+    "@leapjs/common": "^0.5.30",
     "esprima": "^4.0.1",
     "express": "^4.17.1",
-    "mongoose": "^5.9.6",
+    "mongoose": "^5.9.10",
     "reflect-metadata": "0.1.13"
   },
   "devDependencies": {
