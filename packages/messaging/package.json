@@ -17,7 +17,9 @@
     "clean": "shx rm -rf build",
     "start:dev": "cross-env NODE_ENV=development node dist/src/index.js --color",
     "watch": "tsc-watch --onSuccess \"npm run start:dev\"",
-    "test": "cross-env NODE_ENV=test TS_NODE_FILES=true nyc mocha"
+    "test": "cross-env NODE_ENV=test TS_NODE_FILES=true nyc mocha",
+    "snyk-protect": "snyk protect",
+    "prepare": "npm run snyk-protect"
   },
   "dependencies": {
     "@leapjs/common": "^0.5.32",
@@ -27,11 +29,13 @@
     "ejs": "3.0.1",
     "mime-types": "2.1.25",
     "pug": "2.0.4",
-    "reflect-metadata": "0.1.13"
+    "reflect-metadata": "0.1.13",
+    "snyk": "^1.316.1"
   },
   "devDependencies": {
     "@types/ejs": "3.0.0",
     "@types/mime-types": "2.1.0",
     "@types/pug": "2.0.4"
-  }
+  },
+  "snyk": true
 }
