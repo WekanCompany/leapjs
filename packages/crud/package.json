@@ -1,6 +1,6 @@
 {
   "name": "@leapjs/crud",
-  "version": "0.5.32",
+  "version": "0.5.34",
   "author": "Sanchan Moses",
   "repository": {
     "type": "git",
@@ -20,7 +20,7 @@
     "test": "npm run build && cross-env NODE_ENV=test TS_NODE_FILES=true nyc mocha"
   },
   "dependencies": {
-    "@leapjs/common": "^0.5.32",
+    "@leapjs/common": "^0.5.34",
     "mongoose": "^5.9.10",
     "pluralize": "^8.0.0"
   },
