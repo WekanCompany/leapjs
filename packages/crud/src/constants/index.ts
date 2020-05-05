@@ -1,5 +1,3 @@
-import { ICrudControllerMethods } from 'src/interfaces/crud-controller-methods';
-
 const crudMethodParams = new Map<string, [string, [string, string][]]>();
 crudMethodParams.set('createOne', [
   'post',
