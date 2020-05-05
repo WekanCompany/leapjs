@@ -6,14 +6,9 @@
     "outDir": "./dist" /* Redirect output structure to the directory. */,
     "rootDir": "./" /* Specify the root directory of input files. Use to control the output directory structure with --outDir. */,
     "declaration": true,
-    "lib": ["es6"],
+    "lib": ["ES6"],
 
     /* Module Resolution Options */
-    "baseUrl": "./" /* Base directory to resolve non-absolute module names. */,
-    "typeRoots": [
-      "node_modules/@types",
-      "typings/*"
-    ] /* List of folders to include type definitions from. */,
     "types": ["mocha"]
   }
 }
