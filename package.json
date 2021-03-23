@@ -27,7 +27,6 @@
   "engines": {
     "node": "> 8.9.0"
   },
-  "dependencies": {},
   "devDependencies": {
     "@types/cache-manager": "^2.10.2",
     "@types/chai": "^4.2.10",
