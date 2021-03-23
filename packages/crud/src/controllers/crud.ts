@@ -106,6 +106,11 @@ class CrudController<T> {
     await this.service.deleteOne(id);
     return res.status(HttpStatus.NO_CONTENT).end();
   }
+
+  public async deleteMany(ids: string, res: Response): Promise<void> {
+    await this.service.deleteMany(ids);
+    return res.status(HttpStatus.NO_CONTENT).end();
+  }
 }
 
 export default CrudController;

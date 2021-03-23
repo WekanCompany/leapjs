@@ -99,6 +99,16 @@ class CrudService<T> {
     }
     return result;
   }
+
+  public async deleteMany(ids: string): Promise<IDeleteResponse> {
+    const result: IDeleteResponse = await this.model
+      .deleteMany({ _id: { $in: ids.split(',') } })
+      .exec();
+    if (result.deletedCount === 0) {
+      throw new NotFoundException(`${this.model.modelName} not found`);
+    }
+    return result;
+  }
 }
 
 export default CrudService;
