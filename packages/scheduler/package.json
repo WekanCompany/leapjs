@@ -23,7 +23,7 @@
     "@leapjs/common": "^0.5.34",
     "@typegoose/typegoose": "7.0.0",
     "cron": "1.7.2",
-    "cron-parser": "2.13.0",
+    "cron-parser": "2.18.0",
     "moment": "^2.24.0",
     "mongoose": "^5.9.10",
     "reflect-metadata": "0.1.13"
