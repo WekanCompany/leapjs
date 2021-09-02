@@ -23,7 +23,7 @@
     "chalk": "^3.0.0",
     "cors": "^2.8.5",
     "express": "^4.17.1",
-    "mongoose": "^5.9.10",
+    "mongoose": "^6.0.4",
     "reflect-metadata": "0.1.13"
   },
   "devDependencies": {}
