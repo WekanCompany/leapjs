@@ -1,6 +1,6 @@
 {
   "name": "@leapjs/messaging",
-  "version": "0.5.35",
+  "version": "0.5.36",
   "author": "Sanchan Moses",
   "repository": {
     "type": "git",
@@ -20,8 +20,8 @@
     "test": "cross-env NODE_ENV=test TS_NODE_FILES=true nyc mocha"
   },
   "dependencies": {
-    "@leapjs/common": "^0.5.35",
-    "@leapjs/queue": "^0.5.35",
+    "@leapjs/common": "^0.5.36",
+    "@leapjs/queue": "^0.5.36",
     "@sendgrid/helpers": "7.0.1",
     "@sendgrid/mail": "7.0.1",
     "ejs": "3.0.1",

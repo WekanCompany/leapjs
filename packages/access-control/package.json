@@ -1,6 +1,6 @@
 {
   "name": "@leapjs/access-control",
-  "version": "0.5.35",
+  "version": "0.5.36",
   "author": "Sanchan Moses",
   "repository": {
     "type": "git",
@@ -20,7 +20,7 @@
     "test": "cross-env NODE_ENV=test TS_NODE_FILES=true nyc mocha"
   },
   "dependencies": {
-    "@leapjs/common": "^0.5.35",
+    "@leapjs/common": "^0.5.36",
     "@typegoose/typegoose": "7.0.0",
     "class-validator": "^0.11.0",
     "express": "^4.17.1",
