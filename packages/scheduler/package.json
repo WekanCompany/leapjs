@@ -1,6 +1,6 @@
 {
   "name": "@leapjs/scheduler",
-  "version": "0.5.36",
+  "version": "0.5.37",
   "author": "Sanchan Moses",
   "repository": {
     "type": "git",
@@ -20,8 +20,8 @@
     "test": "cross-env NODE_ENV=test TS_NODE_FILES=true nyc mocha"
   },
   "dependencies": {
-    "@leapjs/common": "^0.5.36",
-    "@typegoose/typegoose": "7.0.0",
+    "@leapjs/common": "^0.5.37",
+    "@typegoose/typegoose": "7.6.0",
     "cron": "1.7.2",
     "cron-parser": "2.13.0",
     "moment": "^2.24.0",
