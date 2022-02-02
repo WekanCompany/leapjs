@@ -15,6 +15,7 @@ import {
 } from '@leapjs/common';
 import { ParamsDictionary } from 'express-serve-static-core';
 import cookieParser from 'cookie-parser';
+import bodyParser from 'body-parser';
 import cors, { CorsOptions } from 'cors';
 import ServerRegistry from '../../registry';
 
@@ -48,9 +49,16 @@ class ExpressAdapter implements IHttpAdapter {
     return `/${this.prefix}/${base}/${resourceRoute}`.replace(/\/+/g, '/');
   }
 
-  public create(options?: CorsOptions, whitelist?: string[]): express.Express {
+  public create(
+    options?: CorsOptions,
+    whitelist?: string[],
+    parserOptions?: {
+      json: bodyParser.OptionsJson;
+      urlencoded: bodyParser.OptionsUrlencoded;
+    },
+  ): express.Express {
     this.app = express();
-    this.bodyParser();
+    this.bodyParser(parserOptions);
     this.cookieParser();
     if (options === undefined && whitelist === undefined) {
       this.logger.warn('No domains provided for cors origin filter', 'Router');
@@ -59,9 +67,25 @@ class ExpressAdapter implements IHttpAdapter {
     return this.app;
   }
 
-  public bodyParser(): void {
-    this.app.use(express.json());
-    this.app.use(express.urlencoded({ extended: true }));
+  public bodyParser(parserOptions?: {
+    json: bodyParser.OptionsJson;
+    urlencoded: bodyParser.OptionsUrlencoded;
+  }): void {
+    let jsonOptions: bodyParser.OptionsJson = { limit: '100kb' };
+    let urlencodedOptions: bodyParser.OptionsUrlencoded = {
+      limit: '100kb',
+      extended: true,
+    };
+    if (parserOptions) {
+      if (parserOptions.json) {
+        jsonOptions = parserOptions.json;
+      }
+      if (parserOptions.urlencoded) {
+        urlencodedOptions = parserOptions.urlencoded;
+      }
+    }
+    this.app.use(express.json(jsonOptions));
+    this.app.use(express.urlencoded(urlencodedOptions));
   }
 
   public cookieParser(): void {

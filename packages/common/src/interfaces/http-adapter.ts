@@ -1,12 +1,20 @@
 import express from 'express';
 import { CorsOptions } from 'cors';
+import bodyParser from 'body-parser';
 import { ILeapContainer } from './container';
 import { IConstructor } from './constructor';
 import { HTTP_METHODS } from '../definitions/router';
 
 export interface IHttpAdapter {
   init(container: ILeapContainer, prefix: string): void;
-  create(options?: CorsOptions, whitelist?: string[]): express.Express;
+  create(
+    options?: CorsOptions,
+    whitelist?: string[],
+    parserOptions?: {
+      json: bodyParser.OptionsJson;
+      urlencoded: bodyParser.OptionsUrlencoded;
+    },
+  ): express.Express;
   listen(port: number, host: string): void;
   registerControllers(controllers: IConstructor<any>[]): void;
   registerGlobalMiddlewares(

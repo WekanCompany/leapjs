@@ -17,7 +17,11 @@ class LeapApplication {
   // TODO Add execution context to IHttpServer
   public create(server: IHttpAdapter, options: ILeapApplicationOptions): any {
     server.init(this.container, options.prefix ? options.prefix : '');
-    this.application = server.create(options.corsOptions, options.whitelist);
+    this.application = server.create(
+      options.corsOptions,
+      options.whitelist,
+      options.parserOptions,
+    );
     server.registerControllers(options.controllers);
     server.registerGlobalMiddlewares(
       options.beforeMiddlewares ? options.beforeMiddlewares : [],

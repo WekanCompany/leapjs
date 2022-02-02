@@ -1,5 +1,5 @@
 import { Response, NextFunction } from 'express';
-import { findMatching } from '@leapjs/common';
+import { findMatching, ForbiddenException } from '@leapjs/common';
 import { acActions } from '../constants';
 import formatPermissionError from '../utils';
 
@@ -14,10 +14,12 @@ async function callConstraint(
   const result = await constraint(req, res);
   if (!result[0]) {
     return next(
-      new Error(result[1] ? result[1] : formatPermissionError(method, name)),
+      new ForbiddenException(
+        result[1] ? result[1] : formatPermissionError(method, name),
+      ),
     );
   }
-  return next();
+  next();
 }
 
 function handleCustomAction(

@@ -27,7 +27,9 @@
   "engines": {
     "node": "> 8.9.0"
   },
-  "dependencies": {},
+  "dependencies": {
+    "body-parser": "^1.19.1"
+  },
   "devDependencies": {
     "@types/cache-manager": "^2.10.2",
     "@types/chai": "^4.2.10",
@@ -59,5 +61,5 @@
     "tsconfig-paths": "^3.9.0",
     "typescript": "^3.8.3"
   },
-  "version": "0.5.34"
+  "version": "0.5.35"
 }
