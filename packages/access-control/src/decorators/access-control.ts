@@ -19,7 +19,6 @@ async function callConstraint(
       ),
     );
   }
-  next();
 }
 
 function handleCustomAction(
