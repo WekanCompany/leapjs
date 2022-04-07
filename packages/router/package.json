@@ -21,7 +21,7 @@
   },
   "dependencies": {
     "@leapjs/common": "^0.5.38",
-    "cache-manager": "^3.0.0",
+    "cache-manager": "^3.4.0",
     "class-transformer": "^0.2.3",
     "cookie-parser": "^1.4.4",
     "cors": "^2.8.5",
