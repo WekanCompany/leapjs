@@ -24,7 +24,7 @@
     "@leapjs/queue": "^0.5.38",
     "@sendgrid/helpers": "7.0.1",
     "@sendgrid/mail": "7.0.1",
-    "ejs": "3.0.1",
+    "ejs": "3.1.7",
     "mime-types": "2.1.25",
     "pug": "2.0.4",
     "reflect-metadata": "0.1.13"
