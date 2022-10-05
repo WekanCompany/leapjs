@@ -22,7 +22,7 @@
   "dependencies": {
     "@leapjs/common": "^0.5.38",
     "@leapjs/scheduler": "^0.5.38",
-    "amqplib": "0.5.5",
+    "amqplib": "0.7.1",
     "@types/amqplib": "0.5.13",
     "@typegoose/typegoose": "7.6.0",
     "reflect-metadata": "0.1.13"
