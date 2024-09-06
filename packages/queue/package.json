@@ -24,7 +24,7 @@
     "@leapjs/scheduler": "^0.5.38",
     "amqplib": "0.5.5",
     "@types/amqplib": "0.5.13",
-    "@typegoose/typegoose": "7.6.0",
+    "@typegoose/typegoose": "10.5.0",
     "reflect-metadata": "0.1.13"
   },
   "devDependencies": {}
