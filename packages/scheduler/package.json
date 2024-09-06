@@ -21,11 +21,11 @@
   },
   "dependencies": {
     "@leapjs/common": "^0.5.38",
-    "@typegoose/typegoose": "7.6.0",
-    "cron": "1.7.2",
-    "cron-parser": "2.13.0",
+    "@typegoose/typegoose": "10.5.0",
+    "cron": "2.0.0",
+    "cron-parser": "3.0.0",
     "moment": "^2.24.0",
-    "mongoose": "^5.9.10",
+    "mongoose": "^5.12.4",
     "reflect-metadata": "0.1.13"
   },
   "devDependencies": {
