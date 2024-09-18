@@ -25,7 +25,7 @@
   "dependencies": {
     "@leapjs/common": "^0.5.38",
     "esprima": "^4.0.1",
-    "express": "^4.17.1",
+    "express": "^4.20.0",
     "mongoose": "^5.9.10",
     "reflect-metadata": "0.1.13"
   },
